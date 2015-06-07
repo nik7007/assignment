@@ -51,7 +51,7 @@ function dbCheckTable($table_name)
 
     if (!$result) return false;
 
-    return ($result->num_rows >0);
+    return ($result->num_rows > 0);
 }
 
 function initTables()
@@ -176,7 +176,7 @@ function getTableSize($table)
     if (!$result)
         return 0;
 
-    return (int) $result->fetch_assoc()["count(*)"];
+    return (int)$result->fetch_assoc()["count(*)"];
 }
 
 function getActivities($par1 = false)
@@ -184,7 +184,7 @@ function getActivities($par1 = false)
 
     $result = [];
 
-    global $mysqli, $db_table_activities, $db_limit_to_show;
+    global $mysqli, $db_table_activities, $db_table_reservations, $db_limit_to_show;
 
     $i = getTableSize($db_table_activities);
 
@@ -194,26 +194,42 @@ function getActivities($par1 = false)
 
     if ($i <= $db_limit_to_show) {
         $result["all"] = true;
-        $result["content"] = $mysqli->query("SELECT * FROM $db_table_activities ORDER BY id");
+        $result["content"] = $mysqli->query("
+                                            SELECT *
+                                            FROM $db_table_activities,$db_table_reservations
+                                            WHERE $db_table_reservations.activity = $db_table_activities.id
+                                            GROUP BY $db_table_activities.id
+                                            ORDER BY  $db_table_activities.slot-$db_table_reservations.reservation DESC
+                                            ");
     } else {
 
         if (!$par1)
             $start = 1;
         else
-            $start = $par1 * 10;
+            $start = $par1 * $db_limit_to_show;
 
-        $howMany = 10;
+        $howMany = $db_limit_to_show;
+
+        $start--;
 
         $result["all"] = false;
-        $result["content"] = $mysqli->query("SELECT * FROM $db_table_activities ORDER BY id ASC LIMIT $start, $howMany");
+        $result["content"] = $mysqli->query("
+                                            SELECT *
+                                            FROM $db_table_activities,$db_table_reservations
+                                            WHERE $db_table_reservations.activity = $db_table_activities.id
+                                            GROUP BY $db_table_activities.id
+                                            ORDER BY $db_table_activities.slot-$db_table_reservations.reservation DESC
+                                            LIMIT $start, $howMany
+                                            ");
     }
 
     return $result;
 }
 
-function getNumberReserved($activity){
+function getNumberReserved($activity)
+{
 
-    global $mysqli, $db_table_reservations,$db_table_activities;
+    global $mysqli, $db_table_reservations, $db_table_activities;
     $count = 0;
     $result = $mysqli->query("
         SELECT reservation
@@ -224,13 +240,13 @@ function getNumberReserved($activity){
 
     ");
 
-    if(!$result)
+    if (!$result)
         return 0;
-    else{
+    else {
 
-        while ($row = $result->fetch_assoc()){
+        while ($row = $result->fetch_assoc()) {
 
-            $count += (int) $row["reservation"];
+            $count += (int)$row["reservation"];
 
         }
 

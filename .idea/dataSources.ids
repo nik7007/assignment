@@ -13,7 +13,17 @@
       <column name="description" sqlType="VARCHAR" precision="250" scale="0" nullable="false" jdbcType="12"/>
       <column name="slot" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="reservations_ibfk_2" table="reservations" schema="" catalog="assigment_db" columns="activity"/>
       <index name="name" unique="true" columns="name"/>
+    </table>
+    <table name="reservations" schema="" catalog="assigment_db" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="user" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="activity" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="reservation" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="reservations_ibfk_1" columns="user" ref-table="users" ref-schema="" ref-catalog="assigment_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="reservations_ibfk_2" columns="activity" ref-table="activities" ref-schema="" ref-catalog="assigment_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
     </table>
     <table name="users" schema="" catalog="assigment_db" type="TABLE">
       <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
@@ -21,6 +31,7 @@
       <column name="children" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="password" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="reservations_ibfk_1" table="reservations" schema="" catalog="assigment_db" columns="user"/>
       <index name="name" unique="true" columns="name"/>
     </table>
   </data-source>

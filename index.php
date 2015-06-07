@@ -23,25 +23,82 @@
         else {
             if ($result["all"]) {
                 printContent($result);
+                //toDo: make it look better...
             } else {
 
-                $Max = (int)round(($result["lineNumber"] / $db_limit_to_show)+0.4);
+                $Max = (int)round(($result["lineNumber"] / $db_limit_to_show) + 0.4);
 
-
-
+                if (!isset($_GET["page"])) {
+                    $pag = 1;
+                } else {
+                    if ($_GET["page"] < 1)
+                        $pag = 1;
+                    else if ($_GET["page"] > $Max)
+                        $pag = $Max;
+                    else
+                        $pag = $_GET["page"];
+                }
+                if ($pag > 1)
+                    $result = getActivities($pag);
+                printContent($result);
             }
 
 
         }
 
+        if (isset($pag)):
+            ?>
 
-        ?>
+            <form action="./" method="get">
+                <input type="button" value="<<" onclick="preF();">
+                <?php echo "Page: $pag"; ?> <input type="text" name="page" onchange="check();" title="page">
+                <input type="button" value=">>" onclick="nextF();">
+            </form>
+        <?php endif; ?>
 
-        <!-- end .content --></article>
+        <!-- end .content -->
+    </article>
     <?php
     require "footer.php";
 
     ?>
     <!-- end .container --></div>
+
+<script type="text/javascript">
+
+    <?php if(isset($pag)): ?>
+    function check() {
+        var max = 0;
+        <?php echo "max = $Max; "; ?>
+        if (document.forms[0].page.value > max)
+            document.forms[0].page.value = max;
+            document.forms[0].submit();
+
+    }
+
+    function preF() {
+
+        <?php
+            if($pag>1){
+        $toSend = $pag-1;
+        echo "document.forms[0].page.value = $toSend;
+              document.forms[0].submit();";
+
+         }?>
+
+    }
+
+    function nextF() {
+
+        <?php $toSend = $pag+1;
+        echo "document.forms[0].page.value = $toSend;"; ?>
+        document.forms[0].submit();
+
+    }
+
+    <?php endif; ?>
+
+</script>
+
 </body>
 </html>
