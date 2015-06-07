@@ -1,0 +1,152 @@
+@charset "utf-8";
+body {
+	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	background-color: #263340;
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
+
+ul, ol, dl { 
+	padding: 0;
+	margin: 0;
+}
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;	 
+	padding-right: 15px;
+	padding-left: 15px; 
+}
+a img {
+	border: none;
+}
+
+a:link {
+	color: #42413C;
+	text-decoration: underline; 
+}
+a:visited {
+	color: #6E6C64;
+	text-decoration: underline;
+}
+a:hover, a:active, a:focus { 
+	text-decoration: none;
+}
+
+.container {
+	width: 960px;
+	background-color: #5A7A97;
+	margin: 0 auto;
+	border-left: 1px solid #344657;
+	border-right: 1px solid #344657;
+	border-bottom: 1px none #344657;
+	border-top: 1px none #344657;
+}
+
+header {
+	background-color: #3D5872;
+}
+
+header p {
+	height: 90px;
+	text-align: center;
+	margin: 0;
+	font-size: 57px;
+	color: #D6E4F2;
+}
+
+header a:link{
+	text-decoration:none;
+}
+
+.sidebar1 {
+	float: left;
+	width: 180px;
+	height: 100%;
+	padding-bottom: 10px;
+}
+
+.sidebar1 .nav{	
+	margin-top: 10%;
+	position: fixed;
+}
+
+.content {
+	background-color: #FFFFFF;
+	float: left;
+	margin-left: 175px;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	border: 1px solid #344657;
+}
+aside {
+	float: left;
+	width: 180px;
+	background-color: #EADCAE;
+	padding: 10px 0;
+}
+
+
+.content ul, .content ol {
+	padding: 0 15px 15px 40px; 
+}
+
+
+ul.nav {
+	list-style: none; 
+	border-top: 1px solid #344657; 
+	border-right: 1px solid #344657; 
+	margin-bottom: 15px; 
+}
+ul.nav li {
+	border-bottom: 1px solid #344657;
+}
+ul.nav a, ul.nav a:visited {
+	padding: 5px 5px 5px 15px;
+	display: block;
+	width: 160px;
+	text-decoration: none;
+	background-color: #3D5872;
+	color: #D6E4F2;
+}
+ul.nav a:hover, ul.nav a:active, ul.nav a:focus {
+	background-color: #D6E4F2;
+	color: #3D5872;
+}
+
+
+footer {
+	padding: 10px 0;
+	background-color: #3D5872;
+	position: relative;
+	clear: both;
+}
+footer p{
+	color: #D6E4F2;
+	
+}
+
+footer address{
+	color: #C0D6EB;
+	
+}
+
+/* ~~ Classi float/clear varie ~~ */
+.fltrt {  /* questa classe può essere utilizzata per applicare un float a un elemento a destra nella pagina. L'elemento con float deve precedere l'elemento al quale deve essere affiancato sulla pagina. */
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { /* questa classe può essere utilizzata per applicare un float a un elemento a sinistra nella pagina. L'elemento con float deve precedere l'elemento al quale deve essere affiancato sulla pagina. */
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { /* questa classe può essere inserita in un <br /> o in un blocco vuoto come elemento finale subito dopo l'ultimo blocco con float (all'interno del .container) se il footer viene rimosso o estratto dal .container */
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
+
+/*Supporto HTML5 - Imposta nuovi tag HTML5 per display:block in modo da indicare ai browser come eseguire il rendering corretto dei tag. */
+header, section, footer, aside, article, figure {
+	display: block;
+}
