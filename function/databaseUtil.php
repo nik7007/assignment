@@ -192,15 +192,18 @@ function getActivities($par1 = false)
 
     $result["lineNumber"] = $i;
 
+    $query = "
+              SELECT *
+              FROM $db_table_activities,$db_table_reservations
+              WHERE $db_table_reservations.activity = $db_table_activities.id
+              GROUP BY $db_table_activities.id
+              ORDER BY  $db_table_activities.slot-$db_table_reservations.reservation DESC
+              ";
+
     if ($i <= $db_limit_to_show) {
         $result["all"] = true;
-        $result["content"] = $mysqli->query("
-                                            SELECT *
-                                            FROM $db_table_activities,$db_table_reservations
-                                            WHERE $db_table_reservations.activity = $db_table_activities.id
-                                            GROUP BY $db_table_activities.id
-                                            ORDER BY  $db_table_activities.slot-$db_table_reservations.reservation DESC
-                                            ");
+
+        $result["content"] = $mysqli->query($query);
     } else {
 
         if (!$par1)
@@ -213,12 +216,7 @@ function getActivities($par1 = false)
         $start--;
 
         $result["all"] = false;
-        $result["content"] = $mysqli->query("
-                                            SELECT *
-                                            FROM $db_table_activities,$db_table_reservations
-                                            WHERE $db_table_reservations.activity = $db_table_activities.id
-                                            GROUP BY $db_table_activities.id
-                                            ORDER BY $db_table_activities.slot-$db_table_reservations.reservation DESC
+        $result["content"] = $mysqli->query($query . "
                                             LIMIT $start, $howMany
                                             ");
     }
