@@ -11,6 +11,8 @@ $db_table_users = "";
 $db_table_activities = "";
 $db_table_reservations = "";
 
+$db_limit_to_show = 10;
+
 
 function dbConnection()
 {
@@ -43,12 +45,13 @@ function dbCheckTable($table_name)
 {
     global $mysqli;
 
-    $query = "SHOW TABLES LIKE '" . $table_name . "''";
+    $query = "SHOW TABLES LIKE '" . $table_name . "'";
 
     $result = $mysqli->query($query);
 
     if (!$result) return false;
-    return ($result->num_rows == 1);
+
+    return ($result->num_rows >0);
 }
 
 function initTables()
@@ -120,47 +123,119 @@ function initTables()
         $query = "CREATE TABLE $db_table_reservations(
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         user INT(6) UNSIGNED NOT NULL,
-        activitiy INT(6) UNSIGNED NOT NULL,
+        activity INT(6) UNSIGNED NOT NULL,
         reservation INT(1) UNSIGNED NOT NULL,
         FOREIGN KEY(user) REFERENCES $db_table_users(id),
-        FOREIGN KEY(activitiy) REFERENCES $db_table_activities(id)
+        FOREIGN KEY(activity) REFERENCES $db_table_activities(id)
         )";
 
         $mysqli->query($query);
 
         $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activitiy,reservation)
+        INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(1,1,2)
         ");
 
         $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activitiy,reservation)
+        INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(1,2,1)
         ");
 
         $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activitiy,reservation)
+        INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(2,1,1)
         ");
 
         $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activitiy,reservation)
+        INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(2,2,2)
         ");
 
         $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activitiy,reservation)
+        INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(3,1,2)
         ");
 
         $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activitiy,reservation)
+        INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(3,3,2)
         ");
 
 
     }
 
+
+}
+
+function getTableSize($table)
+{
+    global $mysqli;
+
+    $result = $mysqli->query("SELECT count(*) FROM $table");
+
+    if (!$result)
+        return 0;
+
+    return (int) $result->fetch_assoc()["count(*)"];
+}
+
+function getActivities($par1 = false)
+{
+
+    $result = [];
+
+    global $mysqli, $db_table_activities, $db_limit_to_show;
+
+    $i = getTableSize($db_table_activities);
+
+    if ($i == 0) return false;
+
+    $result["lineNumber"] = $i;
+
+    if ($i <= $db_limit_to_show) {
+        $result["all"] = true;
+        $result["content"] = $mysqli->query("SELECT * FROM $db_table_activities ORDER BY id");
+    } else {
+
+        if (!$par1)
+            $start = 1;
+        else
+            $start = $par1 * 10;
+
+        $howMany = 10;
+
+        $result["all"] = false;
+        $result["content"] = $mysqli->query("SELECT * FROM $db_table_activities ORDER BY id ASC LIMIT $start, $howMany");
+    }
+
+    return $result;
+}
+
+function getNumberReserved($activity){
+
+    global $mysqli, $db_table_reservations,$db_table_activities;
+    $count = 0;
+    $result = $mysqli->query("
+        SELECT reservation
+        FROM $db_table_reservations
+        WHERE  activity = ( SELECT id
+                            FROM $db_table_activities
+                            WHERE name = '$activity')
+
+    ");
+
+    if(!$result)
+        return 0;
+    else{
+
+        while ($row = $result->fetch_assoc()){
+
+            $count += (int) $row["reservation"];
+
+        }
+
+    }
+    return $count;
 
 }
 
