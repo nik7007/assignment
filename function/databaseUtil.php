@@ -65,14 +65,18 @@ function initTables()
         $query = "CREATE TABLE $db_table_users(
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(30) UNIQUE NOT NULL,
-        password VARCHAR(30) NOT NULL
+        password VARCHAR(36) NOT NULL
         )";
 
         $mysqli->query($query);
 
         if ($_db_create_demo_field):
 
-            $mysqli->query("
+            saveNewUser("u1","p1");
+            saveNewUser("u2","p2");
+            saveNewUser("u3","p3");
+
+            /*$mysqli->query("
         INSERT INTO $db_table_users(name,password)
         VALUES('u1','" . md5("p1") . "')
         ");
@@ -85,7 +89,7 @@ function initTables()
             $mysqli->query("
         INSERT INTO $db_table_users(name,password)
         VALUES('u3','" . md5("p3") . "')
-        ");
+        ");*/
 
         endif;
 
@@ -139,7 +143,6 @@ function initTables()
         $mysqli->query($query);
 
         if ($_db_create_demo_field):
-
             $mysqli->query("
         INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(1,1,2)
@@ -268,9 +271,10 @@ function getUser($username, $password)
     global $mysqli, $db_table_users;
     $encodePassword = md5(sanitizeString($password));
 
+
     $query = "SELECT name
               FROM $db_table_users
-              WHERE name = " . sanitizeString($username) . " AND password = $encodePassword";
+              WHERE name = '".sanitizeString($username)."' AND password = '$encodePassword'";
 
     return $mysqli->query($query);
 
@@ -298,7 +302,7 @@ function saveNewUser($username, $password)
 
     return ($mysqli->query("
         INSERT INTO $db_table_users(name,password)
-        VALUES('" . sanitizeString($username) . ", " . $encodePassword . "')
+        VALUES('".sanitizeString($username) ."', '$encodePassword')
         ") != false);
 
 }

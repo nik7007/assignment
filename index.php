@@ -56,13 +56,25 @@
             </form>
         <?php endif; ?>
 
+        <?php if (!logged()): ?>
+        <p class="userInfo">It seems that you are not registered. Do it now, it's free! If you are already a member, <a
+                href="./login.php">click here</a> to log in, or
+            on the login button.</p>
+        <?php endif; ?>
+
         <!-- end .content -->
     </article>
+
+
+
     <?php
     require "footer.php";
 
     ?>
-    <!-- end .container --></div>
+    <!-- end .container -->
+
+
+</div>
 
 <script type="text/javascript">
 

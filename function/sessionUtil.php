@@ -2,23 +2,30 @@
 
 $time_out_session = 2; //min
 
-$loggedIn = false;
+function logged() {
+    return isset ($_SESSION["user"]);
+
+};
 
 function createUserSession($username, $password)
 {
-    global $loggedIn;
-
-    $user = getUser($username, $password);
-
-    if (!$user)
-        return false;
 
     if (isset($_SESSION["user"]))
         destroySession();
 
-    $_SESSION["user"] = $user->fetch_assoc()["name"];
+    $user = getUser($username, $password);
+
+
+    $row = $user->fetch_assoc();
+
+    if (!$user || $row == null) {
+        destroySession();
+        return false;
+    }
+
+    $_SESSION["user"] = $row["name"];
     $_SESSION["activity"] = time();
-    $loggedIn = true;
+
 
     return true;
 
@@ -42,13 +49,11 @@ function checkTimeout()
 
 function destroySession()
 {
-    global $loggedIn;
     $_SESSION = array();
 
 
     if (session_id() != "" || isset($_COOKIE[session_name()]))
         setcookie(session_name(), '', time() - 2592000, '/');
-    $loggedIn = false;
 
     session_destroy();
 }

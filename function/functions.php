@@ -1,10 +1,11 @@
 <?php
 require_once("./function/databaseUtil.php");
-require_once("./function/databaseUtil.php");
+require_once("./function/sessionUtil.php");
 
 session_start();
 
 initDB();
+checkTimeout();
 
 function printContent($content){
 
