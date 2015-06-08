@@ -11,7 +11,7 @@ $db_table_users = "";
 $db_table_activities = "";
 $db_table_reservations = "";
 
-$db_limit_to_show = 10;
+$db_limit_to_show = 0;
 $_db_create_demo_field = true;
 
 
@@ -317,16 +317,19 @@ function initDB()
 
     $db_config = parse_ini_file("./config/database.php", true);
 
-    global $db_url, $db_user_name, $db_password, $db_name, $db_table_users, $db_table_activities, $db_table_reservations;
+    global $db_url, $db_user_name, $db_password, $db_name, $db_table_users, $db_table_activities, $db_table_reservations,$_db_create_demo_field,$db_limit_to_show;
 
     $db_url = $db_config["db_information"]["host"];
     $db_user_name = $db_config["db_information"]["user"];
     $db_password = $db_config["db_information"]["password"];
     $db_name = $db_config["db_information"]["name"];
 
+
     $db_table_users = $db_config["db_table_information"]["users"];
     $db_table_activities = $db_config["db_table_information"]["activities"];
     $db_table_reservations = $db_config["db_table_information"]["reservations"];
+    $_db_create_demo_field = (bool) $db_config["db_table_information"]["demo"];
+    $db_limit_to_show = (int)  $db_config["db_table_information"]["limit"];
 
     dbConnection();
     dbSelectOrCreateDB();

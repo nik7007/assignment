@@ -9,6 +9,7 @@ user = "root"
 password = ""
 name = "assigment_db"
 
+
 ;--------------------;
 
 [db_table_information]
@@ -16,6 +17,8 @@ name = "assigment_db"
 users = "users"
 activities = "activities"
 reservations = "reservations"
+demo = true
+limit = 10
 
 ;*/
 
