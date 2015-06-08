@@ -72,7 +72,9 @@
         <?php echo "max = $Max; "; ?>
         if (document.forms[0].page.value > max)
             document.forms[0].page.value = max;
-            document.forms[0].submit();
+        if (document.forms[0].page.value < 1)
+            document.forms[0].page.value = 1;
+        document.forms[0].submit();
 
     }
 

@@ -90,6 +90,11 @@ aside {
 	padding: 0 15px 15px 40px; 
 }
 
+.activityInfo{
+    font-style: italic;
+    font-weight: bold;
+}
+
 
 ul.nav {
 	list-style: none; 

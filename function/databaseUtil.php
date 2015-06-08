@@ -193,11 +193,11 @@ function getActivities($par1 = false)
     $result["lineNumber"] = $i;
 
     $query = "
-              SELECT *
+              SELECT $db_table_activities.name, $db_table_activities.description, $db_table_activities.slot, ($db_table_activities.slot-SUM($db_table_reservations.reservation)) AS disp
               FROM $db_table_activities,$db_table_reservations
               WHERE $db_table_reservations.activity = $db_table_activities.id
               GROUP BY $db_table_activities.id
-              ORDER BY  $db_table_activities.slot-$db_table_reservations.reservation DESC
+              ORDER BY disp DESC
               ";
 
     if ($i <= $db_limit_to_show) {
@@ -230,7 +230,7 @@ function getNumberReserved($activity)
     global $mysqli, $db_table_reservations, $db_table_activities;
     $count = 0;
     $result = $mysqli->query("
-        SELECT reservation
+        SELECT $db_table_reservations.reservation
         FROM $db_table_reservations
         WHERE  activity = ( SELECT id
                             FROM $db_table_activities
@@ -251,6 +251,52 @@ function getNumberReserved($activity)
     }
     return $count;
 
+}
+
+function getUser($username, $password)
+{
+    global $mysqli, $db_table_users;
+    $encodePassword = md5(sanitizeString($password));
+
+    $query = "SELECT name, children
+              FROM $db_table_users
+              WHERE name = ".sanitizeString($username)." AND password = $encodePassword";
+
+    return $mysqli->query($query);
+
+}
+
+function existUser($username){
+    global $mysqli, $db_table_users;
+
+    $result = $mysqli->query("
+                            SELECT name
+                            FROM $db_table_users
+                            WHERE name = '$username'
+                            ");
+
+    return ($result->num_rows > 0);
+}
+
+function saveNewUser($username, $password, $children){
+
+    global $mysqli, $db_table_users;
+
+    $encodePassword = md5(sanitizeString($password));
+
+    return ($mysqli->query("
+        INSERT INTO $db_table_users(name,children,password)
+        VALUES('".sanitizeString($username)."',$children,'" . $encodePassword . "')
+        ")!=false);
+
+}
+
+function sanitizeString($var)
+{
+    $var = strip_tags($var);
+    $var = htmlentities($var);
+    $var = stripslashes($var);
+    return mysql_real_escape_string($var);
 }
 
 
@@ -277,4 +323,3 @@ function initDB()
 }
 
 
-?>

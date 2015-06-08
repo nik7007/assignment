@@ -1,5 +1,8 @@
 <?php
 require_once("./function/databaseUtil.php");
+require_once("./function/databaseUtil.php");
+
+session_start();
 
 initDB();
 
@@ -10,7 +13,7 @@ function printContent($content){
         echo"<h2>".$row["name"]."</h2>";
 
         echo "<p>".$row["description"] . "<br></p>";
-        echo "<p>Maximum number of places available: " . $row["slot"];
+        echo "<p class='activityInfo'>Maximum number of places available: " . $row["slot"];
         echo "<br>";
         echo "Reserved places: ".getNumberReserved($row["name"])."</p>";
 
@@ -21,4 +24,3 @@ function printContent($content){
     }
 }
 
-?>
