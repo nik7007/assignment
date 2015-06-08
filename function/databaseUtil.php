@@ -12,6 +12,7 @@ $db_table_activities = "";
 $db_table_reservations = "";
 
 $db_limit_to_show = 10;
+$_db_create_demo_field = true;
 
 
 function dbConnection()
@@ -57,33 +58,36 @@ function dbCheckTable($table_name)
 function initTables()
 {
 
-    global $mysqli, $db_table_users, $db_table_activities, $db_table_reservations;
+    global $mysqli, $db_table_users, $db_table_activities, $db_table_reservations, $_db_create_demo_field;
 
 
     if (!dbCheckTable($db_table_users)) {
         $query = "CREATE TABLE $db_table_users(
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(30) UNIQUE NOT NULL,
-        children INT(3) UNSIGNED NOT NULL,
         password VARCHAR(30) NOT NULL
         )";
 
         $mysqli->query($query);
 
-        $mysqli->query("
-        INSERT INTO $db_table_users(name,children,password)
-        VALUES('u1',3 ,'" . md5("p1") . "')
+        if ($_db_create_demo_field):
+
+            $mysqli->query("
+        INSERT INTO $db_table_users(name,password)
+        VALUES('u1','" . md5("p1") . "')
         ");
 
-        $mysqli->query("
-        INSERT INTO $db_table_users(name,children,password)
-        VALUES('u2', 3,'" . md5("p2") . "')
+            $mysqli->query("
+        INSERT INTO $db_table_users(name,password)
+        VALUES('u2', '" . md5("p2") . "')
         ");
 
-        $mysqli->query("
-        INSERT INTO $db_table_users(name,children,password)
-        VALUES('u3',3 ,'" . md5("p3") . "')
+            $mysqli->query("
+        INSERT INTO $db_table_users(name,password)
+        VALUES('u3','" . md5("p3") . "')
         ");
+
+        endif;
 
     }
 
@@ -98,21 +102,24 @@ function initTables()
 
         $mysqli->query($query);
 
+        if ($_db_create_demo_field):
 
-        $mysqli->query("
+            $mysqli->query("
         INSERT INTO $db_table_activities(name,description,slot)
         VALUES('Tennis','We have all the necessary equipment to allow you to play tennis at any age.',6)
         ");
 
-        $mysqli->query("
+            $mysqli->query("
         INSERT INTO $db_table_activities(name,description,slot)
         VALUES('Golf','Have fun on our lawns course. Fun for the whole family!',8)
         ");
 
-        $mysqli->query("
+            $mysqli->query("
         INSERT INTO $db_table_activities(name,description,slot)
         VALUES('Swimming','In our swimming pools you can swim in complete safety and quiet. Our experienced lifeguards are prepared for any emergency.',4)
         ");
+
+        endif;
 
     }
 
@@ -131,36 +138,39 @@ function initTables()
 
         $mysqli->query($query);
 
-        $mysqli->query("
+        if ($_db_create_demo_field):
+
+            $mysqli->query("
         INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(1,1,2)
         ");
 
-        $mysqli->query("
+            $mysqli->query("
         INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(1,2,1)
         ");
 
-        $mysqli->query("
+            $mysqli->query("
         INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(2,1,1)
         ");
 
-        $mysqli->query("
+            $mysqli->query("
         INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(2,2,2)
         ");
 
-        $mysqli->query("
+            $mysqli->query("
         INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(3,1,2)
         ");
 
-        $mysqli->query("
+            $mysqli->query("
         INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES(3,3,2)
         ");
 
+        endif;
 
     }
 
@@ -258,15 +268,16 @@ function getUser($username, $password)
     global $mysqli, $db_table_users;
     $encodePassword = md5(sanitizeString($password));
 
-    $query = "SELECT name, children
+    $query = "SELECT name
               FROM $db_table_users
-              WHERE name = ".sanitizeString($username)." AND password = $encodePassword";
+              WHERE name = " . sanitizeString($username) . " AND password = $encodePassword";
 
     return $mysqli->query($query);
 
 }
 
-function existUser($username){
+function existUser($username)
+{
     global $mysqli, $db_table_users;
 
     $result = $mysqli->query("
@@ -278,16 +289,17 @@ function existUser($username){
     return ($result->num_rows > 0);
 }
 
-function saveNewUser($username, $password, $children){
+function saveNewUser($username, $password)
+{
 
     global $mysqli, $db_table_users;
 
     $encodePassword = md5(sanitizeString($password));
 
     return ($mysqli->query("
-        INSERT INTO $db_table_users(name,children,password)
-        VALUES('".sanitizeString($username)."',$children,'" . $encodePassword . "')
-        ")!=false);
+        INSERT INTO $db_table_users(name,password)
+        VALUES('" . sanitizeString($username) . ", " . $encodePassword . "')
+        ") != false);
 
 }
 

@@ -14,7 +14,6 @@ function createUserSession($username, $password)
         destroySession();
 
     $_SESSION["user"] = $user->fetch_assoc()["name"];
-    $_SESSION["children"] = $user->fetch_assoc()["children"];
     $_SESSION["activity"] = time();
 
     return true;
