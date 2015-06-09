@@ -1,16 +1,28 @@
 <footer>
-    <p>Questo footer contiene la dichiarazione position:relative; per fornire hasLayout a Internet Explorer 6 per il footer e determinarne il clearing corretto. Se non dovete supportare IE6, potete rimuoverlo.</p>
+    <p>Spare time activities</p>
     <address>
-      Contenuto indirizzo
+        Address
     </address>
-  </footer>
+</footer>
 
 <script>
 
+    sticky_navigation_offset_top = $('.sidebar1').offset().top;
     resizePage();
+    sticky_navigation();
 
-    $(window).resize(function(){
+    $(window).scroll(function () {
         resizePage();
+        sticky_navigation();
+
     });
+
+
+    $(window).resize(function () {
+        resizePage();
+        sticky_navigation();
+
+    });
+
 
 </script>

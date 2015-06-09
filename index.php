@@ -23,7 +23,6 @@
         else {
             if ($result["all"]) {
                 printContent($result);
-                //toDo: make it look better...
             } else {
 
                 $Max = (int)round(($result["lineNumber"] / $db_limit_to_show) + 0.4);
@@ -48,20 +47,24 @@
 
         if (isset($pag)):
             ?>
-
-            <form action="./" method="get">
-                <input type="button" value="<<" onclick="preF();">
-                <?php echo "Page: $pag"; ?> <input type="text" name="page" onchange="check();" title="page">
-                <input type="button" value=">>" onclick="nextF();">
-            </form>
+            <section>
+                <form action="./" method="get">
+                    <input type="button" value="<<" onclick="preF();">
+                    <input type="text" name="page" style="display:none" onchange="check();"
+                           title="page"><?php echo "Page: $pag"; ?>
+                    <input type="button" value=">>" onclick="nextF();">
+                </form>
+            </section>
         <?php endif; ?>
 
         <?php if (!logged()): ?>
-        <p class="userInfo">It seems that you are not registered. Do it now, it's free! If you are already a member, <a
-                href="./login.php">click here</a> to log in, or
-            on the login button.</p>
+            <section>
+                <p class="userInfo">It seems that you are not registered. Do it now, it's free! If you are already a
+                    member, <a
+                        href="./login.php">click here</a> to log in, or
+                    on the login button.</p>
+            </section>
         <?php endif; ?>
-
         <!-- end .content -->
     </article>
 

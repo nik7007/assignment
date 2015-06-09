@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Logout</title>
     <?php require_once("include.php") ?>
+
 </head>
 
 <body>
@@ -20,6 +21,8 @@
 
         <p>Logout complete!</p>
 
+        <p><a href="./">Click here</a> to come back to the Home page.</p>
+
         <!-- end .content -->
     </article>
 
@@ -33,6 +36,7 @@
 
 
 </div>
+
 
 </body>
 </html>
