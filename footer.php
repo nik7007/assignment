@@ -4,3 +4,13 @@
       Contenuto indirizzo
     </address>
   </footer>
+
+<script>
+
+    resizePage();
+
+    $(window).resize(function(){
+        resizePage();
+    });
+
+</script>

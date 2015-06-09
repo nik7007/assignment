@@ -19,7 +19,7 @@
             <li><a href="#">Register</a></li>
         <?php else: ?>
             <li><a href="#">Personal Page</a></li>
-            <li><a href="#">Logout</a></li>
+            <li><a href="./logout.php">Logout</a></li>
         <?php endif ?>
 
     </ul>
