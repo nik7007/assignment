@@ -25,17 +25,17 @@
 
             <?php
 
-            $error = "";
+            $error = "<p>";
 
             if (isset($result) && $result) {
                 echo "<p> Successfully login! </p>";
             } else if (isset($result) && !$result) {
-                $error = "Wrong username or password!</p><p>";
+                $error = "<p class='error'>Wrong username or password!</p><p>";
             }
 
 
             if (!logged()):
-                echo "<p>$error Please insert here your username and password: </p>";
+                echo "$error Please insert here your username and password: </p>";
                 ?>
 
                 <form style="margin-left: 15px; margin-bottom: 15px; width: 757px; display: block;" method='post'
@@ -80,8 +80,7 @@
     <script>
 
         function clearError() {
-            $('#errorUser').html("");
-            $('#errorPass').html("");
+            $('.error').html("");
 
         }
 
