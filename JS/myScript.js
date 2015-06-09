@@ -32,3 +32,8 @@ function sticky_navigation() {
         $('.sidebar1').css({'position': 'relative', 'left': 0});
     }
 }
+
+function clearError() {
+    $('.error').html("");
+
+}

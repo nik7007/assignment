@@ -16,7 +16,7 @@
         if (!logged()):
             ?>
             <li><a href="./login.php">Login</a></li>
-            <li><a href="#">Register</a></li>
+            <li><a href="./register.php">Register</a></li>
         <?php else: ?>
             <li><a href="#">Personal Page</a></li>
             <li><a href="./logout.php">Logout</a></li>

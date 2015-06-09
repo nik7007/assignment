@@ -69,6 +69,23 @@ header a:link {
     /*position: fixed;*/
 }
 
+form {
+    text-align: right;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    width: 757px;
+    display: block;
+}
+
+form td.error {
+    text-align: left;
+}
+
+form.navPages {
+
+    text-align: center;
+}
+
 .sidebar1 #userLoggedInfo {
 
     margin-top: 10%;
@@ -96,7 +113,7 @@ header a:link {
 aside {
     float: left;
     width: 180px;
-    background-color: #EADCAE;
+    background-color: #D6E4F2;
     padding: 10px 0;
 }
 
@@ -111,12 +128,13 @@ aside {
 
 .userInfo {
 
-    margin: 80px 20px 80px 20px;
+    margin: 80px 20px 20px 20px;
     padding: 0;
 }
-.error{
 
-    color: red;
+.error {
+
+    color: #e51a31;
     font-style: italic;
 
 }

@@ -38,7 +38,7 @@
                 echo "$error Please insert here your username and password: </p>";
                 ?>
 
-                <form style="margin-left: 15px; margin-bottom: 15px; width: 757px; display: block;" method='post'
+                <form method='post'
                       action="./login.php">
 
                     <table>
@@ -79,10 +79,6 @@
 <?php if (!logged()): ?>
     <script>
 
-        function clearError() {
-            $('.error').html("");
-
-        }
 
         function sendToServer() {
 

@@ -41,14 +41,12 @@
                     $result = getActivities($pag);
                 printContent($result);
             }
-
-
         }
 
         if (isset($pag)):
             ?>
             <section>
-                <form action="./" method="get">
+                <form class="navPages" action="./" method="get">
                     <input type="button" value="<<" onclick="preF();">
                     <input type="text" name="page" style="display:none" onchange="check();"
                            title="page"><?php echo "Page: $pag"; ?>
