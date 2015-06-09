@@ -38,21 +38,23 @@
                 echo "<p>$error Please insert here your username and password: </p>";
                 ?>
 
-                <form style="margin-left: 15px; margin-bottom: 15px; width: 757px;display: block;" method='post'
+                <form style="margin-left: 15px; margin-bottom: 15px; width: 757px; display: block;" method='post'
                       action="./login.php">
 
                     <table>
                         <tr>
                             <td>Username:</td>
-                            <td><input type='text' maxlength='16' name='user' value=''/></td>
+                            <td><input type='text' onclick="clearError()" maxlength='16' name='user' value=''/></td>
+                            <td id="errorUser" class="error"></td>
                         </tr>
                         <tr>
                             <td>Password:</td>
-                            <td><input type='password' maxlength='16' name='pass' value=''/></td>
+                            <td><input type='password' onclick="clearError()" maxlength='16' name='pass' value=''/></td>
+                            <td id="errorPass" class="error"></td>
                         </tr>
 
                         <tr>
-                            <td><input type='submit' value='Login'/></td>
+                            <td><input type='button' onclick="sendToServer();" value='Login'/></td>
                         </tr>
                     </table>
 
@@ -74,6 +76,45 @@
 
 
 </div>
+<?php if (!logged()): ?>
+    <script>
+
+        function clearError() {
+            $('#errorUser').html("");
+            $('#errorPass').html("");
+
+        }
+
+        function sendToServer() {
+
+            var userName = $('form')[0][0];
+            var password = $('form')[0][1];
+            var error = false;
+
+            clearError();
+
+            if (userName.value === "") {
+                error = true;
+                $('#errorUser').html("Invalid User name!!");
+                userName.value = "";
+                password.value = "";
+            }
+
+            if (password.value === "") {
+                error = true;
+                $('#errorPass').html("Invalid Password!!");
+                password.value = "";
+            }
+
+            if (!error) {
+                $('form')[0].submit();
+            }
+
+
+        }
+
+    </script>
+<?php endif; ?>
 
 
 </body>

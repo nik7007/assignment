@@ -114,6 +114,12 @@ aside {
     margin: 80px 20px 80px 20px;
     padding: 0;
 }
+.error{
+
+    color: red;
+    font-style: italic;
+
+}
 
 ul.nav {
     list-style: none;
