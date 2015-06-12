@@ -41,9 +41,13 @@
 
                     </table>
 
-                    <?php if(!$result["all"]){
+                    <?php if (!$result["all"]) {
 
-                        //echo "";
+                        echo "<div style='text-align: center;margin-top: 10px;'>
+                                <button type='button' id = 'pPagePre' onclick='pre();'> << </button>
+                                <span>Page: </span><span  id = 'pPagePage'>1</span>
+                                <button type='button' id = 'pPageNext' onclick='next();'> >> </button>
+                              </div>";
 
                     } ?>
 
@@ -118,6 +122,35 @@
 
         }
 
+        <?php if(!$result["all"]): ?>
+
+        var totalNumber = <?php echo $result["lineNumber"];  ?>;
+        var limit = <?php echo $db_limit_to_show;  ?>;
+
+        var pageN = $('#pPagePage').html();
+
+        function pre() {
+
+            if (pageN > 1) {
+                pageN--;
+                printRegistrableActivities(pageN);
+                $('#pPagePage').html(pageN);
+
+            }
+
+
+        }
+        function next() {
+
+            if (pageN < Math.ceil(totalNumber / limit)) {
+                pageN++;
+                printRegistrableActivities(pageN);
+                $('#pPagePage').html(pageN);
+            }
+        }
+
+
+        <?php endif; ?>
 
     </script>
 
