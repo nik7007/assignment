@@ -77,6 +77,15 @@ form {
     display: block;
 }
 
+table.pPage {
+    margin-left: 15px;
+}
+
+table.pPage td {
+    text-align: center;
+    padding: 0 15px;
+}
+
 form td.error {
     text-align: left;
 }
@@ -98,6 +107,11 @@ form.navPages {
     border: 1px solid #344657;
     border-left: 0;
 
+}
+
+#reservationAction {
+    height: 30px;
+    margin-top: 16px;
 }
 
 .sidebar1 .nav {

@@ -38,8 +38,7 @@
                 echo "$error Please insert here your username and password: </p>";
                 ?>
 
-                <form method='post'
-                      action="./login.php">
+                <form method='post' action="./login.php">
 
                     <table>
                         <tr>

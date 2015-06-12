@@ -26,6 +26,8 @@ function dbConnection()
         die();
     }
 
+    $mysqli->autocommit(true);
+
 }
 
 function dbSelectOrCreateDB()
@@ -128,35 +130,14 @@ function initTables()
         $mysqli->query($query);
 
         if ($_db_create_demo_field):
-            $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activity,reservation)
-        VALUES(1,1,2)
-        ");
+            newReservation('u1', 'Tennis', 2);
+            newReservation('u1', 'Golf', 1);
 
-            $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activity,reservation)
-        VALUES(1,2,1)
-        ");
+            newReservation('u2', 'Tennis', 1);
+            newReservation('u2', 'Golf', 2);
 
-            $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activity,reservation)
-        VALUES(2,1,1)
-        ");
-
-            $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activity,reservation)
-        VALUES(2,2,2)
-        ");
-
-            $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activity,reservation)
-        VALUES(3,1,2)
-        ");
-
-            $mysqli->query("
-        INSERT INTO $db_table_reservations(user,activity,reservation)
-        VALUES(3,3,2)
-        ");
+            newReservation('u3', 'Tennis', 2);
+            newReservation('u3', 'Swimming', 2);
 
         endif;
 
@@ -177,12 +158,26 @@ function getTableSize($table)
     return (int)$result->fetch_assoc()["count(*)"];
 }
 
-function getActivities($par1 = false)
+function getActivities($par1 = false, $user = false, $in = false)
 {
 
     $result = [];
-
     global $mysqli, $db_table_activities, $db_table_reservations, $db_limit_to_show;
+
+    $notIn = "";
+
+    if ($user) {
+        global $db_table_users;
+
+        $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc()['id'];
+
+        if (!$in)
+            $notIn = "AND $db_table_reservations.activity NOT IN (SELECT  activity FROM $db_table_reservations WHERE user = $u)";
+        else
+            $notIn = "AND $db_table_reservations.activity IN (SELECT  activity FROM $db_table_reservations WHERE user = $u)";
+
+    }
+
 
     $i = getTableSize($db_table_activities);
 
@@ -193,30 +188,50 @@ function getActivities($par1 = false)
     $query = "
               SELECT $db_table_activities.name, $db_table_activities.description, $db_table_activities.slot, ($db_table_activities.slot-SUM($db_table_reservations.reservation)) AS disp
               FROM $db_table_activities,$db_table_reservations
-              WHERE $db_table_reservations.activity = $db_table_activities.id
+              WHERE $db_table_reservations.activity = $db_table_activities.id $notIn
               GROUP BY $db_table_activities.id
               ORDER BY disp DESC
               ";
 
+    $query1 = "SELECT $db_table_activities.name, $db_table_activities.description, $db_table_activities.slot
+              FROM $db_table_activities
+              WHERE 1=1 $notIn
+              ORDER BY $db_table_activities.slot DESC";
+
     if ($i <= $db_limit_to_show) {
         $result["all"] = true;
 
-        $result["content"] = $mysqli->query($query);
+        $r1 = $mysqli->query($query);
+
+        if ($r1 != null)
+            $result["content"] = $r1;
+        else
+            $result["content"] = $mysqli->query($query1);
+
     } else {
 
         if (!$par1)
             $start = 1;
+        else if ($par1 > $i / $db_limit_to_show) $start = ceil($i / $db_limit_to_show);
         else
-            $start = $par1 * $db_limit_to_show;
+            $start = ceil((float)$par1 * $db_limit_to_show);
 
         $howMany = $db_limit_to_show;
 
         $start--;
 
         $result["all"] = false;
-        $result["content"] = $mysqli->query($query . "
+
+        $r1 = $mysqli->query($query . "
                                             LIMIT $start, $howMany
                                             ");
+        if ($r1 != null)
+            $result["content"] = $r1;
+        else
+            $result["content"] = $mysqli->query($query1 . "
+                                            LIMIT $start, $howMany
+                                            ");
+
     }
 
     return $result;
@@ -226,13 +241,14 @@ function getNumberReserved($activity)
 {
 
     global $mysqli, $db_table_reservations, $db_table_activities;
-    $count = 0;
+
     $result = $mysqli->query("
-        SELECT $db_table_reservations.reservation
+        SELECT SUM(reservation)
         FROM $db_table_reservations
         WHERE  activity = ( SELECT id
                             FROM $db_table_activities
                             WHERE name = '$activity')
+        GROUP BY activity
 
     ");
 
@@ -240,14 +256,10 @@ function getNumberReserved($activity)
         return 0;
     else {
 
-        while ($row = $result->fetch_assoc()) {
-
-            $count += (int)$row["reservation"];
-
-        }
+        return $result->fetch_assoc()["SUM(reservation)"];
 
     }
-    return $count;
+
 
 }
 
@@ -301,26 +313,108 @@ function saveNewUser($username, $password)
 function getFreeSlots($activity)
 {
 
-    global $mysqli, $db_table_reservations, $db_table_activities;
+    global $mysqli, $db_table_activities;
 
     $toSearch = sanitizeString($activity);
 
+    $reserved = getNumberReserved($activity);
+
     $query = "
-              SELECT ($db_table_activities.slot-SUM($db_table_reservations.reservation)) AS disp
-              FROM $db_table_activities,$db_table_reservations
-              WHERE $db_table_reservations.activity = $db_table_activities.id AND $db_table_activities.name = '$toSearch'
-              GROUP BY $db_table_activities.id
+              SELECT slot
+              FROM $db_table_activities
+              WHERE $db_table_activities.name = '$toSearch'
               ";
+
 
     $result = $mysqli->query($query);
 
-    if ($result) {
 
-        return $row = $result->fetch_assoc()['disp'];
+    if ($result) {
+        $row = $result->fetch_assoc();
+
+        return $row['slot'] - $reserved;
 
     }
 
+
     return -1;
+
+}
+
+/*
+function getReservation($user, $par = false)
+{
+
+    global $mysqli, $db_table_users, $db_table_activities, $db_table_reservations, $db_limit_to_show;
+
+    $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc()['id'];
+
+    $i = $mysqli->query("
+                        SELECT Count(*)
+                        FROM $db_table_reservations
+                        WHERE user = $u
+                        ");
+
+    if ($i == 0) return false;
+
+    $result["lineNumber"] = $i;
+
+    $query = "
+              SELECT $db_table_activities.name, $db_table_reservations.reservation
+              FROM $db_table_activities,$db_table_reservations
+              WHERE $db_table_activities.id = $db_table_reservations.activity AND $db_table_reservations.user= $u";
+
+    if ($i < $db_limit_to_show) {
+
+        $result["all"] = true;
+
+        $r = $mysqli->query($query);
+
+        if ($r)
+            $result["content"] = $r->fetch_assoc();
+        else
+            $result["content"] = false;
+
+    } else {
+
+        if (!$par)
+            $start = 1;
+        else if ($par > $i / $db_limit_to_show) $start = ceil($i / $db_limit_to_show);
+        else
+            $start = ceil((float)$par * $db_limit_to_show);
+
+        $howMany = $db_limit_to_show;
+
+        $start--;
+
+        $result["all"] = false;
+        $r = $mysqli->query($query . "LIMIT $start, $howMany");
+
+        if ($r)
+            $result["content"] = $r->fetch_assoc();
+        else
+            $result["content"] = false;
+
+    }
+
+    return $result;
+
+
+}
+*/
+
+function canReserve($user, $activity)
+{
+    global $mysqli, $db_table_users, $db_table_activities, $db_table_reservations;
+
+    $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc()['id'];
+    $a = $mysqli->query("SELECT id FROM $db_table_activities WHERE  name = '" . sanitizeString($activity) . "'")->fetch_assoc()['id'];
+
+    $result = $mysqli->query("SELECT Count(*) FROM $db_table_reservations WHERE activity = $a AND user = $u");
+
+    if (!$result || $result->fetch_assoc()['Count(*)'] == 0)
+        return true;
+    return false;
 
 }
 
@@ -330,33 +424,79 @@ function newReservation($user, $activity, $howMany)
     global $mysqli, $db_table_users, $db_table_activities, $db_table_reservations;
 
     if ($howMany > 4) {
+        return -4;
+    }
+    if (!canReserve($user, $activity))
         return -3;
-    }
 
-    $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'");
-    $a = $mysqli->query("SELECT id FROM $db_table_activities WHERE  name = '" . sanitizeString($activity) . "'");
+    $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc()['id'];
+    $a = $mysqli->query("SELECT id FROM $db_table_activities WHERE  name = '" . sanitizeString($activity) . "'")->fetch_assoc()['id'];
 
-    $flag = $mysqli->query("LOCK TABLES $db_table_reservations WRITE");
+    try {
+        $mysqli->autocommit(false);
 
-    if (!$flag) {
-        $mysqli->query("UNLOCK TABLES");
-        return -2;
+        $slotFree = getFreeSlots($activity);
 
-    }
+        if ($slotFree == null)
+            $slotFree = 0;
 
-    if ($howMany > getFreeSlots($activity)) {
-        $mysqli->query("UNLOCK TABLES");
-        return -1;
-    } else {
 
-        $result = $mysqli->query("
+        if ($howMany > $slotFree) {
+            throw new Exception("Error! not enough slot.");
+
+        } else {
+
+            $mysqli->autocommit(false);
+
+
+            //die("Start");
+
+            $query = "
         INSERT INTO $db_table_reservations(user,activity,reservation)
         VALUES($u,$a,$howMany)
-        ");
+        ";
 
-        $mysqli->query("UNLOCK TABLES");
+            $result = $mysqli->query($query);
+            if (!$result) {
+                throw new Exception("Error! Query fail.");
+            }
+
+            $mysqli->commit();
+            $result = 1;
+        }
+
+    } catch (Exception $e) {
+        $mysqli->rollback();
+
+        switch ($e->getMessage()) {
+
+            case "Error! not enough slot.":
+                $result = -1;
+                break;
+            case "Error! Query fail.":
+                $result = -2;
+                break;
+            default:
+                $result = 1;
+        }
 
     }
+
+    $mysqli->autocommit(true);
+
+    return $result;
+}
+
+function removeReservation($user, $activity)
+{
+    global $mysqli, $db_table_users, $db_table_activities, $db_table_reservations;
+    $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc()['id'];
+    $a = $mysqli->query("SELECT id FROM $db_table_activities WHERE  name = '" . sanitizeString($activity) . "'")->fetch_assoc()['id'];
+
+
+    $result = $mysqli->query("DELETE FROM $db_table_reservations WHERE user = $u AND activity = $a");
+
+
     return $result;
 }
 
