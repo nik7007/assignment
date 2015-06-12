@@ -174,12 +174,38 @@ function getActivities($par1 = false, $user = false, $in = false)
         if (!$in)
             $notIn = "AND $db_table_reservations.activity NOT IN (SELECT  activity FROM $db_table_reservations WHERE user = $u)";
         else
-            $notIn = "AND $db_table_reservations.activity IN (SELECT  activity FROM $db_table_reservations WHERE user = $u)";
+            $notIn = "AND $db_table_reservations.user = $u";
 
     }
 
-
+    if (!$user)
     $i = getTableSize($db_table_activities);
+    else {
+        $qn1 = "
+              SELECT count(*)
+              FROM $db_table_activities,$db_table_reservations
+              WHERE $db_table_reservations.activity = $db_table_activities.id $notIn
+              GROUP BY $db_table_activities.id";
+
+        $n1 = $mysqli->query($qn1);
+        if ($n1)
+            $n = $n1->fetch_assoc()["count(*)"];
+        else {
+            $qn2 = "
+              SELECT count(*)
+              FROM $db_table_activities
+              WHERE 1=1 $notIn";
+
+            $n2 = $mysqli->query($qn2);
+
+            if ($n2)
+                $n = $n2->fetch_assoc()["count(*)"];
+            else
+                $n = 0;
+        }
+
+        $i = $n;
+    }
 
     if ($i == 0) return false;
 

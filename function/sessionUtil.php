@@ -1,6 +1,6 @@
 <?php
 
-$time_out_session = 20000; //min
+$time_out_session = 2; //min
 
 function logged() {
     return isset ($_SESSION["user"]);

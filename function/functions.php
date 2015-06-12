@@ -4,6 +4,17 @@ require_once("./function/sessionUtil.php");
 
 session_start();
 
+if (!isset($_SERVER['HTTP_COOKIE'])) {
+    if (!isset($_GET['test_enabled_cookie'])) {
+        header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '?test_enabled_cookie=test');
+        exit();
+    } else {
+        header('Location: disabled_cookie.php');
+        exit();
+    }
+}
+
+
 initDB();
 checkTimeout();
 
@@ -23,6 +34,7 @@ function printContent($content)
 
     }
 }
+
 
 function printRegistrableActivities($activities)
 {
@@ -48,6 +60,27 @@ function printRegistrableActivities($activities)
     }
 }
 
+function printCancelableActivities($activities)
+{
+    for ($i = 0; $row = $activities["content"]->fetch_assoc(); $i++) {
+
+        $cn = $row["slot"] - $row["disp"] - 1;
+
+        echo "<tr>";
+        echo "<td id = 'activityC$i'>" . $row["name"] . "</td><td id = 'na$i'>1</td>
+              <td id = 'nc$i'>$cn</td>
+              <td>
+                <button type = 'button' onclick = \"cancelRegistration('activityC$i')\">Cancel Registration</button>
+              </td>
+              ";
+
+        echo "</tr>";
+
+
+    }
+
+}
+
 function registerNewActivity($activity, $howMany)
 {
 
@@ -69,5 +102,15 @@ function registerNewActivity($activity, $howMany)
 
     return "Error! Unexpected behavior";
 
+
+}
+
+function cancelRegister($activity, $user)
+{
+
+    if (removeReservation($user, $activity)) {
+        echo "Reservation removed";
+    } else
+        echo "Error! Unable to perform the require operation.";
 
 }
