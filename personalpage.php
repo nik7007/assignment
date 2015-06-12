@@ -78,17 +78,19 @@
 
         function sendRegister(activityID, nC) {
 
+            var reservationAction = $('#reservationAction');
+
             var nch = parseInt($('#' + nC).val()) + 1;
             var activity = $('#' + activityID).html();
             $.post('./ajaxHandler.php', {action: 'registerNewActivity', activity: activity, number: nch}).done(
                 function (data) {
                     var pt = new RegExp("Error!*");
                     if (pt.test(data))
-                        $('#reservationAction').css('color', '#e51a31');
+                        reservationAction.css('color', '#e51a31');
                     else
-                        $('#reservationAction').css('color', 'rgb(15, 142, 36)');
+                        reservationAction.css('color', 'rgb(15, 142, 36)');
 
-                    $('#reservationAction').html(data);
+                    reservationAction.html(data);
 
                 }
             );
@@ -98,7 +100,14 @@
 
         function colorTable() {
             for (var i = 1; i <= 4; i++)
-                $('table tr > td:nth-child(' + parseInt(i) + ')').attr('style', 'background-color:#D6E4F2;');
+                $('table.pPage tr > td:nth-child(' + parseInt(i) + ')').attr('style', 'background-color:#D6E4F2;');
+
+            for (var i = 0; i < $('table.pPage tr').length; i++) {
+
+                if ($('#as' + parseInt(i)).html() <= 0)
+                    $('table.pPage tr > td:nth-child(' + parseInt(i) + ')').attr('style', 'background-color:#e51a31;');
+
+            }
         }
 
         function printRegistrableActivities(page) {
@@ -110,7 +119,6 @@
 
             $.post('./ajaxHandler.php', {action: 'printRegistrableActivities', page: page}).done(
                 function (data) {
-                    console.log(data);
                     if (data === "")
                         table.html("<p>There is not available activities.</p>");
                     else {
