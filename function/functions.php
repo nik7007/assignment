@@ -96,7 +96,7 @@ function registerNewActivity($activity, $howMany)
     if ($result == -2)
         return "Error! Database busy. Tray again later.";
     if ($result == -1)
-        return "Error! Not slots available.";
+        return "Error! Slots not available.";
     if ($result == 1)
         return "Insert new reservation.";
 

@@ -179,13 +179,13 @@ function getActivities($par1 = false, $user = false, $in = false)
     }
 
     if (!$user)
-    $i = getTableSize($db_table_activities);
+        $i = getTableSize($db_table_activities);
     else {
         $qn1 = "
               SELECT count(*)
               FROM $db_table_activities,$db_table_reservations
               WHERE $db_table_reservations.activity = $db_table_activities.id $notIn
-              GROUP BY $db_table_activities.id";
+              ";
 
         $n1 = $mysqli->query($qn1);
         if ($n1)
