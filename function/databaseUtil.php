@@ -207,9 +207,15 @@ function getActivities($par1 = false, $user = false, $in = false)
         $i = $n;
     }
 
-    if ($i == 0) return false;
+    //if ($i == 0) return false;
 
     $result["lineNumber"] = $i;
+
+    if ($i == 0) {
+        $result["all"] = true;
+        return $result;
+        $result["content"] = false;
+    }
 
     $query = "
               SELECT $db_table_activities.name, $db_table_activities.description, $db_table_activities.slot, ($db_table_activities.slot-SUM($db_table_reservations.reservation)) AS disp

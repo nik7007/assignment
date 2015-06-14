@@ -38,47 +38,59 @@ function printContent($content)
 
 function printRegistrableActivities($activities)
 {
+    $array = [];
+    $content = "";
+
     for ($i = 0; $row = $activities["content"]->fetch_assoc(); $i++) {
-        echo "<tr>";
+        $content .= "<tr>";
 
-        echo "<td id='activity$i' >" . $row["name"] . "</td><td id='ts$i' >" . $row["slot"] . "</td>
-            <td id='as$i' >" . $row["disp"] . "</td>
-            <td>
-                <select id='ac$i'>
-                    <option value='0'>0</option>
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option></select>
-            </td>
-            <td>
-                <button type='button' onclick=\"sendRegister('activity$i','ac$i');\">Register</button>
-            </td>";
+        $content .= "<td id='activity$i' >" . $row["name"] . "</td><td id='ts$i' >" . $row["slot"] . "</td>";
+        $content .= "<td id='as$i' >" . $row["disp"] . "</td>";
+        $content .= "<td>";
+        $content .= "<select id='ac$i'>";
+        $content .= "<option value='0'>0</option>";
+        $content .= "<option value='1'>1</option>";
+        $content .= "<option value='2'>2</option>";
+        $content .= "<option value='3'>3</option></select>";
+        $content .= "</td>";
+        $content .= "<td>";
+        $content .= "<button type='button' onclick=\"sendRegister('activity$i','ac$i');\">Register</button>";
+        $content .= "</td>";
 
 
-        echo "</tr>";
+        $content .= "</tr>";
 
     }
+
+    $array["content"] = $content;
+    $array["lineNumber"] = $activities["lineNumber"];
+    echo json_encode($array, JSON_UNESCAPED_SLASHES, 5120);
 }
 
 function printCancelableActivities($activities)
 {
+    $array = [];
+    $content = "";
     for ($i = 0; $row = $activities["content"]->fetch_assoc(); $i++) {
 
         $cn = $row["slot"] - $row["disp"] - 1;
 
-        echo "<tr>";
-        echo "<td id = 'activityC$i'>" . $row["name"] . "</td><td id = 'na$i'>1</td>
-              <td id = 'nc$i'>$cn</td>
-              <td>
-                <button type = 'button' onclick = \"cancelRegistration('activityC$i')\">Cancel Registration</button>
-              </td>
-              ";
+        $content .= "<tr>";
+        $content .= "<td id = 'activityC$i'>" . $row["name"] . "</td><td id = 'na$i'>1</td>";
+        $content .= "<td id = 'nc$i'>$cn</td>";
+        $content .= "<td>";
+        $content .= "<button type = 'button' onclick = \"cancelRegistration('activityC$i')\">Cancel Registration</button>";
+        $content .= "</td>";
 
-        echo "</tr>";
+
+        $content .= "</tr>";
 
 
     }
 
+    $array["content"] = $content;
+    $array["lineNumber"] = $activities["lineNumber"];
+    echo json_encode($array, JSON_UNESCAPED_SLASHES, 5120);
 }
 
 function registerNewActivity($activity, $howMany)

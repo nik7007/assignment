@@ -100,6 +100,10 @@
 <?php if (logged() && $result): ?>
     <script>
 
+        var limit = <?php echo $db_limit_to_show;  ?>;
+        var totalNumber = <?php echo $result["lineNumber"];  ?>;
+        var totalNumberC = <?php echo $remove["lineNumber"];  ?>;
+
         printRegistrableActivities();
         printCancelableActivities();
 
@@ -185,17 +189,22 @@
 
             var table = $('#cancelable');
 
-            $.post('./ajaxHandler.php', {action: 'printCancelableActivities', page: page}).done(
+            $.post('./ajaxHandler.php', {action: 'printCancelableActivities', page: page},'json').done(
                 function (data) {
 
                     if (data === "Reload")
                         location.reload();
 
-                    if (data === "")
+                    data = JSON.parse(data);
+
+                    if (data["lineNumber"] > limit && (typeof pageNc === 'undefined'))
+                        location.reload();
+
+                    if (data[0] === "")
                         table.html("<p>Your are not yet registered for any activities.</p>");
                     else {
                         table.html("<tr><td>Activity</td><td>Adults number</td><td>Children number</td>");
-                        table.append(data);
+                        table.append(data["content"]);
                         colorTable();
                     }
 
@@ -211,17 +220,24 @@
 
             var table = $('#available');
 
-            $.post('./ajaxHandler.php', {action: 'printRegistrableActivities', page: page}).done(
+            $.post('./ajaxHandler.php', {action: 'printRegistrableActivities', page: page}, 'json').done(
                 function (data) {
 
                     if (data === "Reload")
                         location.reload();
 
-                    if (data === "")
+                    data = JSON.parse(data);
+
+                    if (data["lineNumber"] > limit && (typeof pageN === 'undefined'))
+                        location.reload();
+
+                    if (data["content"] === "")
                         table.html("<p>There is not available activities.</p>");
                     else {
                         table.html("<tr><td>Activity</td><td>Total Slot</td><td>Available Slot</td><td>How many children</td></tr>");
-                        table.append(data);
+                        table.append(data["content"]);
+
+
                         colorTable();
 
                         for (var i = 0; i < $('table#available tr').length; i++) {
@@ -238,11 +254,10 @@
 
         }
 
-        var limit = <?php echo $db_limit_to_show;  ?>;
+
 
         <?php if(!$result["all"]): ?>
 
-        var totalNumber = <?php echo $result["lineNumber"];  ?>;
 
         var pageN = $('#pPagePage').html();
 
@@ -266,11 +281,9 @@
             }
         }
 
-
         <?php endif;
          if(!$remove["all"]):?>
 
-        var totalNumberC = <?php echo $remove["lineNumber"];  ?>;
 
         var pageNc = $('#pPagePageC').html();
 
