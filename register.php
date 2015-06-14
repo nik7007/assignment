@@ -30,7 +30,7 @@
             if (isset($result)) {
                 if ($result)
                     echo "<p> Successfully Register! </p>";
-                else $error = "<p class='error'>Invalid Username or password!</p><p>";
+                else $error = "<p class='error'>Username not available!</p><p>";
             }
             if (!isset($result) || !$result):
                 echo "$error Please choose an usermane and password! Do not forgot them, there is no way to recover: </p>";

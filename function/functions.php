@@ -40,27 +40,27 @@ function printRegistrableActivities($activities)
 {
     $array = [];
     $content = "";
+    if (isset($activities["content"]))
+        for ($i = 0; $row = $activities["content"]->fetch_assoc(); $i++) {
+            $content .= "<tr>";
 
-    for ($i = 0; $row = $activities["content"]->fetch_assoc(); $i++) {
-        $content .= "<tr>";
-
-        $content .= "<td id='activity$i' >" . $row["name"] . "</td><td id='ts$i' >" . $row["slot"] . "</td>";
-        $content .= "<td id='as$i' >" . $row["disp"] . "</td>";
-        $content .= "<td>";
-        $content .= "<select id='ac$i'>";
-        $content .= "<option value='0'>0</option>";
-        $content .= "<option value='1'>1</option>";
-        $content .= "<option value='2'>2</option>";
-        $content .= "<option value='3'>3</option></select>";
-        $content .= "</td>";
-        $content .= "<td>";
-        $content .= "<button type='button' onclick=\"sendRegister('activity$i','ac$i');\">Register</button>";
-        $content .= "</td>";
+            $content .= "<td id='activity$i' >" . $row["name"] . "</td><td id='ts$i' >" . $row["slot"] . "</td>";
+            $content .= "<td id='as$i' >" . $row["disp"] . "</td>";
+            $content .= "<td>";
+            $content .= "<select id='ac$i'>";
+            $content .= "<option value='0'>0</option>";
+            $content .= "<option value='1'>1</option>";
+            $content .= "<option value='2'>2</option>";
+            $content .= "<option value='3'>3</option></select>";
+            $content .= "</td>";
+            $content .= "<td>";
+            $content .= "<button type='button' onclick=\"sendRegister('activity$i','ac$i');\">Register</button>";
+            $content .= "</td>";
 
 
-        $content .= "</tr>";
+            $content .= "</tr>";
 
-    }
+        }
 
     $array["content"] = $content;
     $array["lineNumber"] = $activities["lineNumber"];
@@ -71,22 +71,23 @@ function printCancelableActivities($activities)
 {
     $array = [];
     $content = "";
-    for ($i = 0; $row = $activities["content"]->fetch_assoc(); $i++) {
+    if (isset($activities["content"]))
+        for ($i = 0; $row = $activities["content"]->fetch_assoc(); $i++) {
 
-        $cn = $row["slot"] - $row["disp"] - 1;
+            $cn = $row["slot"] - $row["disp"] - 1;
 
-        $content .= "<tr>";
-        $content .= "<td id = 'activityC$i'>" . $row["name"] . "</td><td id = 'na$i'>1</td>";
-        $content .= "<td id = 'nc$i'>$cn</td>";
-        $content .= "<td>";
-        $content .= "<button type = 'button' onclick = \"cancelRegistration('activityC$i')\">Cancel Registration</button>";
-        $content .= "</td>";
-
-
-        $content .= "</tr>";
+            $content .= "<tr>";
+            $content .= "<td id = 'activityC$i'>" . $row["name"] . "</td><td id = 'na$i'>1</td>";
+            $content .= "<td id = 'nc$i'>$cn</td>";
+            $content .= "<td>";
+            $content .= "<button type = 'button' onclick = \"cancelRegistration('activityC$i')\">Cancel Registration</button>";
+            $content .= "</td>";
 
 
-    }
+            $content .= "</tr>";
+
+
+        }
 
     $array["content"] = $content;
     $array["lineNumber"] = $activities["lineNumber"];

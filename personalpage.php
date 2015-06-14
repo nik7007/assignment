@@ -34,55 +34,46 @@
             <section>
                 <h3>Available activities for reservation:</h3>
 
-                <?php if ($result && $result["content"] != null): ?>
 
-                    <table id="available" class="pPage">
+                <table id="available" class="pPage">
 
 
-                    </table>
+                </table>
 
-                    <?php if (!$result["all"]) {
+                <?php if (!$result["all"]) {
 
-                        echo "<div style='text-align: center;margin-top: 10px;'>
+                    echo "<div style='text-align: center;margin-top: 10px;'>
                                 <button type='button' id = 'pPagePre' onclick='pre();'> << </button>
                                 <span>Page: </span><span  id = 'pPagePage'>1</span>
                                 <button type='button' id = 'pPageNext' onclick='next();'> >> </button>
                               </div>";
 
-                    } ?>
+                } ?>
 
-                    <p id="reservationAction"></p>
-
-                <?php else: ?>
-                    <p>Unable to get activities. Try again later.</p>
-
-                <?php endif; ?>
-
-                <?php $remove = getActivities(false, $_SESSION["user"], true);
-
-                if ($remove && $remove["content"] != null): ?>
-
-                    <table id="cancelable" class="rPage">
+                <p id="reservationAction"></p>
 
 
-                    </table>
 
-                    <?php if (!$remove["all"]) {
+                <?php $remove = getActivities(false, $_SESSION["user"], true);?>
 
-                        echo "<div style='text-align: center;margin-top: 10px;'>
+                <table id="cancelable" class="rPage">
+
+
+                </table>
+
+                <?php if (!$remove["all"]) {
+
+                    echo "<div style='text-align: center;margin-top: 10px;'>
                                 <button type='button' id = 'pPagePreC' onclick='preC();'> << </button>
                                 <span>Page: </span><span  id = 'pPagePageC'>1</span>
                                 <button type='button' id = 'pPageNextC' onclick='nextC();'> >> </button>
                               </div>";
 
-                    } ?>
+                } ?>
 
 
-                    <p id="removeAction"></p>
+                <p id="removeAction"></p>
 
-                <?php else: ?>
-                    <p>You are not register in any activity</p>
-                <?php endif; ?>
 
             </section>
 
@@ -97,7 +88,7 @@
 
 
 </div>
-<?php if (logged() && $result): ?>
+<?php if (logged()): ?>
     <script>
 
         var limit = <?php echo $db_limit_to_show;  ?>;
@@ -189,7 +180,7 @@
 
             var table = $('#cancelable');
 
-            $.post('./ajaxHandler.php', {action: 'printCancelableActivities', page: page},'json').done(
+            $.post('./ajaxHandler.php', {action: 'printCancelableActivities', page: page}, 'json').done(
                 function (data) {
 
                     if (data === "Reload")
@@ -199,8 +190,10 @@
 
                     if (data["lineNumber"] > limit && (typeof pageNc === 'undefined'))
                         location.reload();
+                    else
+                        totalNumberC = data["lineNumber"];
 
-                    if (data[0] === "")
+                    if (data["content"] === "")
                         table.html("<p>Your are not yet registered for any activities.</p>");
                     else {
                         table.html("<tr><td>Activity</td><td>Adults number</td><td>Children number</td>");
@@ -230,6 +223,8 @@
 
                     if (data["lineNumber"] > limit && (typeof pageN === 'undefined'))
                         location.reload();
+                    else
+                        totalNumber = data["lineNumber"];
 
                     if (data["content"] === "")
                         table.html("<p>There is not available activities.</p>");
@@ -253,7 +248,6 @@
                 });
 
         }
-
 
 
         <?php if(!$result["all"]): ?>

@@ -182,24 +182,24 @@ function getActivities($par1 = false, $user = false, $in = false)
         $i = getTableSize($db_table_activities);
     else {
         $qn1 = "
-              SELECT count(*)
+              SELECT count(DISTINCT $db_table_activities.id)
               FROM $db_table_activities,$db_table_reservations
               WHERE $db_table_reservations.activity = $db_table_activities.id $notIn
               ";
 
         $n1 = $mysqli->query($qn1);
         if ($n1)
-            $n = $n1->fetch_assoc()["count(*)"];
+            $n = $n1->fetch_assoc()["count(DISTINCT $db_table_activities.id)"];
         else {
             $qn2 = "
-              SELECT count(*)
+              SELECT count(DISTINCT $db_table_activities.id)
               FROM $db_table_activities
               WHERE 1=1 $notIn";
 
             $n2 = $mysqli->query($qn2);
 
             if ($n2)
-                $n = $n2->fetch_assoc()["count(*)"];
+                $n = $n2->fetch_assoc()["count(DISTINCT $db_table_activities.id)"];
             else
                 $n = 0;
         }
@@ -214,7 +214,7 @@ function getActivities($par1 = false, $user = false, $in = false)
     if ($i == 0) {
         $result["all"] = true;
         return $result;
-        $result["content"] = false;
+        $result["content"] = null;
     }
 
     $query = "
