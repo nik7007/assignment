@@ -67,7 +67,7 @@
                 </form>
             <?php endif;
             if (isset($result) && $result)
-            echo "<p>Now you can <a href='./login.php'>Login</a> and use our services!</p>";?>
+                echo "<p>Now you can <a href='./login.php'>Login</a> and use our services!</p>"; ?>
 
 
         </section>
@@ -88,6 +88,9 @@
 
 <script>
 
+    document.addEventListener("keypress", function (event) {
+        if (event.keyCode == 13) sendToServer();
+    });
 
     function sendToServer() {
 

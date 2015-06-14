@@ -53,7 +53,7 @@
                         </tr>
 
                         <tr>
-                            <td><input type='button' onclick="sendToServer();" value='Login'/></td>
+                            <td><input type='button' id="send" onclick="sendToServer();" value='Login'/></td>
                         </tr>
                     </table>
 
@@ -77,6 +77,10 @@
 </div>
 <?php if (!logged()): ?>
     <script>
+
+        document.addEventListener("keypress", function (event) {
+            if (event.keyCode == 13) sendToServer();
+        });
 
 
         function sendToServer() {
