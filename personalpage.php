@@ -50,7 +50,7 @@
 
                 } ?>
 
-                <p id="reservationAction"></p>
+                <p id="reservationAction" class="error"></p>
 
 
 
@@ -72,7 +72,7 @@
                 } ?>
 
 
-                <p id="removeAction"></p>
+                <p id="removeAction" class="error"></p>
 
 
             </section>
@@ -117,6 +117,9 @@
 
             var nch = parseInt($('#' + nC).val()) + 1;
             var activity = $('#' + activityID).html();
+
+            clearError();
+
             $.post('./ajaxHandler.php', {action: 'registerNewActivity', activity: activity, number: nch}).done(
                 function (data) {
 
@@ -142,8 +145,9 @@
         function cancelRegistration(activityID) {
 
             var removeAction = $('#removeAction');
-
             var activity = $('#' + activityID).html();
+
+            clearError();
 
             $.post('./ajaxHandler.php', {action: 'cancelRegister', activity: activity}).done(
                 function (data) {

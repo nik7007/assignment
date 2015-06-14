@@ -207,8 +207,6 @@ function getActivities($par1 = false, $user = false, $in = false)
         $i = $n;
     }
 
-    //if ($i == 0) return false;
-
     $result["lineNumber"] = $i;
 
     if ($i == 0) {
@@ -331,6 +329,11 @@ function saveNewUser($username, $password)
     $ps = sanitizeString($password);
 
     if (empty($usr) || empty($ps))
+        return false;
+
+    $query = "SELECT COUNT(*) FROM $db_table_users WHERE name = '$usr'";
+
+    if ($mysqli->query($query)->fetch_assoc()["COUNT(*)"] > 0)
         return false;
 
     $encodePassword = md5($ps);
