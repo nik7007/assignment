@@ -93,7 +93,7 @@ function initTables()
 
         $mysqli->query($query);
 
-        if ($_db_create_demo_field):
+        //if ($_db_create_demo_field):
 
             $mysqli->query("
         INSERT INTO $db_table_activities(name,description,slot)
@@ -110,7 +110,7 @@ function initTables()
         VALUES('Swimming','In our swimming pools you can swim in complete safety and quiet. Our experienced lifeguards are prepared for any emergency.',4)
         ");
 
-        endif;
+        //endif;
 
     }
 
