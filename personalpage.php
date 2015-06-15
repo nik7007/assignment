@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Personal Page</title>
-    <?php require_once("include.php") ?>
+    <?php require_once("include.php"); ?>
 </head>
 
 <body>

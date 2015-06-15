@@ -155,13 +155,15 @@ function getTableSize($table)
     if (!$result)
         return 0;
 
-    return (int)$result->fetch_assoc()["count(*)"];
+    $r = $result->fetch_assoc();
+
+    return (int)$r["count(*)"];
 }
 
 function getActivities($par1 = false, $user = false, $in = false)
 {
 
-    $result = [];
+    $result = array();
     global $mysqli, $db_table_activities, $db_table_reservations, $db_limit_to_show;
 
     $notIn = "";
@@ -170,7 +172,9 @@ function getActivities($par1 = false, $user = false, $in = false)
     if ($user) {
         global $db_table_users;
 
-        $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc()['id'];
+        $uD = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc();
+
+        $u = $uD['id'];
 
         if (!$in)
             $notIn = "AND $db_table_activities.id NOT IN (SELECT  activity FROM $db_table_reservations WHERE user = $u)";
@@ -189,9 +193,10 @@ function getActivities($par1 = false, $user = false, $in = false)
               ";
 
         $n1 = $mysqli->query($qn1);
-        if ($n1)
-            $n = $n1->fetch_assoc()["count(DISTINCT $db_table_activities.id)"];
-        else {
+        if ($n1) {
+            $nA = $n1->fetch_assoc();
+            $n = $nA["count(DISTINCT $db_table_activities.id)"];
+        } else {
             $qn2 = "
               SELECT count(DISTINCT $db_table_activities.id)
               FROM $db_table_activities
@@ -199,9 +204,10 @@ function getActivities($par1 = false, $user = false, $in = false)
 
             $n2 = $mysqli->query($qn2);
 
-            if ($n2)
-                $n = $n2->fetch_assoc()["count(DISTINCT $db_table_activities.id)"];
-            else
+            if ($n2) {
+                $nA = $n2->fetch_assoc();
+                $n = $nA["count(DISTINCT $db_table_activities.id)"];
+            } else
                 $n = 0;
         }
 
@@ -287,7 +293,9 @@ function getNumberReserved($activity)
         return 0;
     else {
 
-        return $result->fetch_assoc()["SUM(reservation)"];
+        $r = $result->fetch_assoc();
+
+        return $r["SUM(reservation)"];
 
     }
 
@@ -334,7 +342,9 @@ function saveNewUser($username, $password)
 
     $query = "SELECT COUNT(*) FROM $db_table_users WHERE name = '$usr'";
 
-    if ($mysqli->query($query)->fetch_assoc()["COUNT(*)"] > 0)
+    $flag = $mysqli->query($query)->fetch_assoc();
+
+    if ($flag["COUNT(*)"] > 0)
         return false;
 
     $encodePassword = md5($ps);
@@ -443,13 +453,23 @@ function canReserve($user, $activity)
 {
     global $mysqli, $db_table_users, $db_table_activities, $db_table_reservations;
 
-    $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc()['id'];
-    $a = $mysqli->query("SELECT id FROM $db_table_activities WHERE  name = '" . sanitizeString($activity) . "'")->fetch_assoc()['id'];
+    $uD = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc();
+    $aD = $mysqli->query("SELECT id FROM $db_table_activities WHERE  name = '" . sanitizeString($activity) . "'")->fetch_assoc();
+
+    $u = $uD['id'];
+    $a = $aD['id'];
 
     $result = $mysqli->query("SELECT Count(*) FROM $db_table_reservations WHERE activity = $a AND user = $u");
 
-    if (!$result || $result->fetch_assoc()['Count(*)'] == 0)
+    if (!$result)
         return true;
+
+
+    $r = $result->fetch_assoc();
+
+    if ($r['Count(*)'] == 0)
+        return true;
+
     return false;
 
 }
@@ -465,8 +485,11 @@ function newReservation($user, $activity, $howMany)
     if (!canReserve($user, $activity))
         return -3;
 
-    $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc()['id'];
-    $a = $mysqli->query("SELECT id FROM $db_table_activities WHERE  name = '" . sanitizeString($activity) . "'")->fetch_assoc()['id'];
+    $uD = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc();
+    $aD = $mysqli->query("SELECT id FROM $db_table_activities WHERE  name = '" . sanitizeString($activity) . "'")->fetch_assoc();
+
+    $u = $uD['id'];
+    $a = $aD['id'];
 
     try {
         $mysqli->autocommit(false);
@@ -526,8 +549,12 @@ function newReservation($user, $activity, $howMany)
 function removeReservation($user, $activity)
 {
     global $mysqli, $db_table_users, $db_table_activities, $db_table_reservations;
-    $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc()['id'];
-    $a = $mysqli->query("SELECT id FROM $db_table_activities WHERE  name = '" . sanitizeString($activity) . "'")->fetch_assoc()['id'];
+
+    $uD = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc();
+    $aD = $mysqli->query("SELECT id FROM $db_table_activities WHERE  name = '" . sanitizeString($activity) . "'")->fetch_assoc();
+
+    $u = $uD['id'];
+    $a = $aD['id'];
 
 
     $result = $mysqli->query("DELETE FROM $db_table_reservations WHERE user = $u AND activity = $a");

@@ -4,7 +4,7 @@ require_once("./function/sessionUtil.php");
 
 session_start();
 
-/*if (!isset($_SERVER["HTTP_COOKIE"])) {
+if (!isset($_SERVER["HTTP_COOKIE"])) {
     if (!isset($_GET["test_enabled_cookie"])) {
         header('Location: http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . '?test_enabled_cookie=test');
         exit();
@@ -12,7 +12,7 @@ session_start();
         header('Location: disabled_cookie.php');
         exit();
     }
-}*/
+}
 
 
 initDB();
@@ -38,7 +38,7 @@ function printContent($content)
 
 function printRegistrableActivities($activities)
 {
-    $array = [];
+    $array = array();
     $content = "";
     if (isset($activities["content"]))
         for ($i = 0; $row = $activities["content"]->fetch_assoc(); $i++) {
@@ -74,7 +74,7 @@ function printRegistrableActivities($activities)
 
 function printCancelableActivities($activities)
 {
-    $array = [];
+    $array = array();
     $content = "";
     if (isset($activities["content"]))
         for ($i = 0; $row = $activities["content"]->fetch_assoc(); $i++) {
