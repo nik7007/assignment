@@ -1,12 +1,6 @@
 <?php
-
 require_once("./init.php");
 
-/*if ($_SERVER["HTTPS"] != "on") {
-    header("HTTP/1.1 301 Moved Permanently");
-    header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-    exit();
-}*/
 require_once "./function/functions.php";
 
 
