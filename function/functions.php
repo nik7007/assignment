@@ -4,7 +4,7 @@ require_once("./function/sessionUtil.php");
 
 session_start();
 
-if (!isset($_SERVER["HTTP_COOKIE"])) {
+/*if (!isset($_SERVER["HTTP_COOKIE"])) {
     if (!isset($_GET["test_enabled_cookie"])) {
         header('Location: http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . '?test_enabled_cookie=test');
         exit();
@@ -12,7 +12,7 @@ if (!isset($_SERVER["HTTP_COOKIE"])) {
         header('Location: disabled_cookie.php');
         exit();
     }
-}
+}*/
 
 
 initDB();
@@ -42,10 +42,15 @@ function printRegistrableActivities($activities)
     $content = "";
     if (isset($activities["content"]))
         for ($i = 0; $row = $activities["content"]->fetch_assoc(); $i++) {
+
+            $disp = $row["disp"];
+            if ($disp == null)
+                $disp = $row["slot"];
+
             $content .= "<tr>";
 
             $content .= "<td id='activity$i' >" . $row["name"] . "</td><td id='ts$i' >" . $row["slot"] . "</td>";
-            $content .= "<td id='as$i' >" . $row["disp"] . "</td>";
+            $content .= "<td id='as$i' >" . $disp . "</td>";
             $content .= "<td>";
             $content .= "<select id='ac$i'>";
             $content .= "<option value='0'>0</option>";

@@ -95,17 +95,17 @@ function initTables()
 
         //if ($_db_create_demo_field):
 
-            $mysqli->query("
+        $mysqli->query("
         INSERT INTO $db_table_activities(name,description,slot)
         VALUES('Tennis','We have all the necessary equipment to allow you to play tennis at any age.',6)
         ");
 
-            $mysqli->query("
+        $mysqli->query("
         INSERT INTO $db_table_activities(name,description,slot)
         VALUES('Golf','Have fun on our lawns course. Fun for the whole family!',8)
         ");
 
-            $mysqli->query("
+        $mysqli->query("
         INSERT INTO $db_table_activities(name,description,slot)
         VALUES('Swimming','In our swimming pools you can swim in complete safety and quiet. Our experienced lifeguards are prepared for any emergency.',4)
         ");
@@ -166,15 +166,16 @@ function getActivities($par1 = false, $user = false, $in = false)
 
     $notIn = "";
 
+
     if ($user) {
         global $db_table_users;
 
         $u = $mysqli->query("SELECT id FROM $db_table_users WHERE  name = '" . sanitizeString($user) . "'")->fetch_assoc()['id'];
 
         if (!$in)
-            $notIn = "AND $db_table_reservations.activity NOT IN (SELECT  activity FROM $db_table_reservations WHERE user = $u)";
+            $notIn = "AND $db_table_activities.id NOT IN (SELECT  activity FROM $db_table_reservations WHERE user = $u)";
         else
-            $notIn = "AND $db_table_reservations.user = $u";
+            $notIn = "AND $db_table_activities.id IN (SELECT $db_table_reservations.activity FROM $db_table_reservations WHERE $db_table_reservations.user = $u)";
 
     }
 
@@ -183,8 +184,8 @@ function getActivities($par1 = false, $user = false, $in = false)
     else {
         $qn1 = "
               SELECT count(DISTINCT $db_table_activities.id)
-              FROM $db_table_activities,$db_table_reservations
-              WHERE $db_table_reservations.activity = $db_table_activities.id $notIn
+              FROM $db_table_activities
+              WHERE 1=1 $notIn
               ";
 
         $n1 = $mysqli->query($qn1);
@@ -216,9 +217,9 @@ function getActivities($par1 = false, $user = false, $in = false)
     }
 
     $query = "
-              SELECT $db_table_activities.name, $db_table_activities.description, $db_table_activities.slot, ($db_table_activities.slot-SUM($db_table_reservations.reservation)) AS disp
-              FROM $db_table_activities,$db_table_reservations
-              WHERE $db_table_reservations.activity = $db_table_activities.id $notIn
+              SELECT $db_table_activities.name, $db_table_activities.description, $db_table_activities.slot, ($db_table_activities.slot-COALESCE((SELECT SUM(reservation) FROM $db_table_reservations WHERE $db_table_reservations.activity = activities.id),0)) AS disp
+              FROM $db_table_activities
+              WHERE 1=1 $notIn
               GROUP BY $db_table_activities.id
               ORDER BY disp DESC
               ";
@@ -233,7 +234,7 @@ function getActivities($par1 = false, $user = false, $in = false)
 
         $r1 = $mysqli->query($query);
 
-        if ($r1 != null)
+        if ($r1->num_rows != 0)
             $result["content"] = $r1;
         else
             $result["content"] = $mysqli->query($query1);
@@ -282,7 +283,7 @@ function getNumberReserved($activity)
 
     ");
 
-    if (!$result)
+    if ($result->num_rows == 0)
         return 0;
     else {
 
