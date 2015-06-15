@@ -56,7 +56,7 @@ function printRegistrableActivities($activities)
 
     $array["content"] = $content;
     $array["lineNumber"] = $activities["lineNumber"];
-    echo json_encode($array, JSON_UNESCAPED_SLASHES, 5120);
+    echo json_encode($array);
 }
 
 function printCancelableActivities($activities)
@@ -83,7 +83,7 @@ function printCancelableActivities($activities)
 
     $array["content"] = $content;
     $array["lineNumber"] = $activities["lineNumber"];
-    echo json_encode($array, JSON_UNESCAPED_SLASHES, 5120);
+    echo json_encode($array);
 }
 
 function registerNewActivity($activity, $howMany)
