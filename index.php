@@ -1,3 +1,4 @@
+<?php require_once("./init.php"); ?>
 <!doctype html>
 <html>
 <head>
