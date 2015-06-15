@@ -17,7 +17,7 @@ name = "assigment_db"
 users = "users"
 activities = "activities"
 reservations = "reservations"
-demo = true
+demo = false
 limit = 10
 
 ;*/
