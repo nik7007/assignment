@@ -565,10 +565,12 @@ function removeReservation($user, $activity)
 
 function sanitizeString($var)
 {
+    global $mysqli;
+    
     $var = strip_tags($var);
     $var = htmlentities($var);
     $var = stripslashes($var);
-    return mysql_real_escape_string($var);
+    return $mysqli->real_escape_string($var);
 }
 
 
