@@ -61,7 +61,7 @@
                         </tr>
 
                         <tr>
-                            <td><input type='button' onclick="sendToServer();" value='Login'/></td>
+                            <td><input type='button' onclick="sendToServer();" value='Register'/></td>
                         </tr>
                     </table>
 
