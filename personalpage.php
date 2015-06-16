@@ -242,9 +242,9 @@
 
                         for (var i = 0; i < $('table#available tr').length; i++) {
                             if ($('#as' + parseInt(i)).html() <= 0) {
-                                $('table#available tr:eq(' + parseInt(i) + 1 + ') td').attr('style', 'background-color:#e51a31!important;');
-                                $('table#available tr:eq(' + parseInt(i) + 1 + ') > td:nth-child(5)').attr('style', '');
-                                $('table#available tr:eq(' + parseInt(i) + ') > td:nth-child(5)').html("No mor slots available").css('color', '#e51a31');
+                                $('table#available tr:eq(' + (parseInt(i) + 1) + ') td').attr('style', 'background-color:#e51a31!important;');
+                                $('table#available tr:eq(' + (parseInt(i) + 1) + ') > td:nth-child(5)').attr('style', '');
+                                $('table#available tr:eq(' + (parseInt(i) + 1) + ') > td:nth-child(5)').html("No more slots available").css('color', '#e51a31');
                             }
 
                         }
