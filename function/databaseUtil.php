@@ -168,6 +168,8 @@ function getActivities($par1 = false, $user = false, $in = false)
 
     $notIn = "";
 
+    $sIn = "";
+
 
     if ($user) {
         global $db_table_users;
@@ -180,6 +182,9 @@ function getActivities($par1 = false, $user = false, $in = false)
             $notIn = "AND $db_table_activities.id NOT IN (SELECT  activity FROM $db_table_reservations WHERE user = $u)";
         else
             $notIn = "AND $db_table_activities.id IN (SELECT $db_table_reservations.activity FROM $db_table_reservations WHERE $db_table_reservations.user = $u)";
+
+        if($in)
+            $sIn = " AND $db_table_reservations.user = $u";
 
     }
 
@@ -223,7 +228,7 @@ function getActivities($par1 = false, $user = false, $in = false)
     }
 
     $query = "
-              SELECT $db_table_activities.name, $db_table_activities.description, $db_table_activities.slot, ($db_table_activities.slot-COALESCE((SELECT SUM(reservation) FROM $db_table_reservations WHERE $db_table_reservations.activity = activities.id),0)) AS disp
+              SELECT $db_table_activities.name, $db_table_activities.description, $db_table_activities.slot, ($db_table_activities.slot-COALESCE((SELECT SUM(reservation) FROM $db_table_reservations WHERE $db_table_reservations.activity = activities.id".$sIn."),0)) AS disp
               FROM $db_table_activities
               WHERE 1=1 $notIn
               GROUP BY $db_table_activities.id
@@ -507,8 +512,6 @@ function newReservation($user, $activity, $howMany)
 
             $mysqli->autocommit(false);
 
-
-            //die("Start");
 
             $query = "
         INSERT INTO $db_table_reservations(user,activity,reservation)
