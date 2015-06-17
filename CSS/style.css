@@ -70,11 +70,12 @@ header a:link {
 }
 
 form {
-    text-align: right;
-    margin-left: 15px;
-    margin-bottom: 15px;
-    width: 757px;
-    display: block;
+	text-align: right;
+	margin-left: 15px;
+	margin-bottom: 15px;
+	width: 757px;
+	display: block;
+	margin-right: 0px;
 }
 
 table.pPage, table.rPage {
@@ -195,29 +196,42 @@ footer address {
     color: #C0D6EB;
 
 }
+	
+button, input[type="button"] {
+	background-color: #5A7A97;
+	-webkit-border-radius: 1px;
+	-moz-border-radius: 1px;
+	border-radius: 1px;
+	color: #D6E4F2;
+    padding: 5px 10px;
+    text-decoration: none;
+	border: 1px solid #3D5872;
+}
 
-/* ~~ Classi float/clear varie ~~ */
+button:hover, input[type="button"]:hover {
+	background-color: #D6E4F2;
+	text-decoration: none;
+	border: 1px solid #344657;
+	color: #5A7A97;
+}
+
 .fltrt {
-    /* questa classe può essere utilizzata per applicare un float a un elemento a destra nella pagina. L'elemento con float deve precedere l'elemento al quale deve essere affiancato sulla pagina. */
     float: right;
     margin-left: 8px;
 }
 
 .fltlft {
-    /* questa classe può essere utilizzata per applicare un float a un elemento a sinistra nella pagina. L'elemento con float deve precedere l'elemento al quale deve essere affiancato sulla pagina. */
     float: left;
     margin-right: 8px;
 }
 
 .clearfloat {
-    /* questa classe può essere inserita in un <br /> o in un blocco vuoto come elemento finale subito dopo l'ultimo blocco con float (all'interno del .container) se il footer viene rimosso o estratto dal .container */
     clear: both;
     height: 0;
     font-size: 1px;
     line-height: 0;
 }
 
-/*Supporto HTML5 - Imposta nuovi tag HTML5 per display:block in modo da indicare ai browser come eseguire il rendering corretto dei tag. */
 header, section, footer, aside, article, figure {
     display: block;
 }
