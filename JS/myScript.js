@@ -37,3 +37,8 @@ function clearError() {
     $('.error').html("");
 
 }
+
+function onClosePage() {
+    $.post('./ajaxHandler.php', {action: 'closingPage'});
+
+}

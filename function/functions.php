@@ -119,3 +119,10 @@ function cancelRegister($activity, $user)
         echo "Error! Unable to perform the require operation.";
 
 }
+
+function closingPage()
+{
+
+    closeConnection();
+
+}

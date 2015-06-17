@@ -30,6 +30,15 @@ function dbConnection()
 
 }
 
+function closeConnection()
+{
+
+    global $mysqli;
+
+    return $mysqli->close();
+
+}
+
 function dbSelectOrCreateDB()
 {
     global $mysqli, $db_name;
@@ -183,7 +192,7 @@ function getActivities($par1 = false, $user = false, $in = false)
         else
             $notIn = "AND $db_table_activities.id IN (SELECT $db_table_reservations.activity FROM $db_table_reservations WHERE $db_table_reservations.user = $u)";
 
-        if($in)
+        if ($in)
             $sIn = " AND $db_table_reservations.user = $u";
 
     }
@@ -228,7 +237,7 @@ function getActivities($par1 = false, $user = false, $in = false)
     }
 
     $query = "
-              SELECT $db_table_activities.name, $db_table_activities.description, $db_table_activities.slot, ($db_table_activities.slot-COALESCE((SELECT SUM(reservation) FROM $db_table_reservations WHERE $db_table_reservations.activity = activities.id".$sIn."),0)) AS disp
+              SELECT $db_table_activities.name, $db_table_activities.description, $db_table_activities.slot, ($db_table_activities.slot-COALESCE((SELECT SUM(reservation) FROM $db_table_reservations WHERE $db_table_reservations.activity = activities.id" . $sIn . "),0)) AS disp
               FROM $db_table_activities
               WHERE 1=1 $notIn
               GROUP BY $db_table_activities.id
@@ -569,7 +578,7 @@ function removeReservation($user, $activity)
 function sanitizeString($var)
 {
     global $mysqli;
-    
+
     $var = strip_tags($var);
     $var = htmlentities($var);
     $var = stripslashes($var);

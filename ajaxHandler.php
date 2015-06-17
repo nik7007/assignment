@@ -42,6 +42,9 @@ switch (sanitizeString($_POST["action"])) {
         else
             echo "Error! unable to satisfy the request.";
         break;
+    case "closingPage":
+        closingPage();
+        break;
 
     default:
         die();
