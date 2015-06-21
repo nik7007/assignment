@@ -26,6 +26,8 @@ function dbConnection()
         die();
     }
 
+    $mysqli->set_charset("utf8");
+
     $mysqli->autocommit(true);
 
 }
