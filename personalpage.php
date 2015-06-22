@@ -30,7 +30,7 @@
             $result = getActivities(false, $_SESSION["user"]);
             ?>
 
-            <h1>Welcome back <?php echo $_SESSION["user"]; ?></h1>
+            <h1>Welcome back <span class="userName"><?php echo $_SESSION["user"]; ?></span></h1>
 
             <section>
                 <h3>Available activities for reservation:</h3>
@@ -57,6 +57,7 @@
 
                 <?php $remove = getActivities(false, $_SESSION["user"], true);?>
 
+                <h3>Reserved Activities:</h3>
                 <table id="cancelable" class="rPage">
 
 

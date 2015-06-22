@@ -66,23 +66,22 @@ header a:link {
     width: 180px;
     height: 100%;
     padding-bottom: 10px;
-    /*position: fixed;*/
 }
 
 form {
-	text-align: right;
-	margin-left: 15px;
-	margin-bottom: 15px;
-	width: 757px;
-	display: block;
-	margin-right: 0px;
+    text-align: right;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    width: 757px;
+    display: block;
+    margin-right: 0;
 }
 
 table.pPage, table.rPage {
     margin-left: 15px;
 }
 
-table.pPage td,table.rPage td {
+table.pPage td, table.rPage td {
     text-align: center;
     padding: 0 15px;
 }
@@ -196,23 +195,31 @@ footer address {
     color: #C0D6EB;
 
 }
-	
+
 button, input[type="button"] {
-	background-color: #5A7A97;
-	-webkit-border-radius: 1px;
-	-moz-border-radius: 1px;
-	border-radius: 1px;
-	color: #D6E4F2;
+    background-color: #5A7A97;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    color: #D6E4F2;
     padding: 5px 10px;
     text-decoration: none;
-	border: 1px solid #3D5872;
+    border: 1px solid #3D5872;
 }
 
 button:hover, input[type="button"]:hover {
-	background-color: #D6E4F2;
-	text-decoration: none;
-	border: 1px solid #344657;
-	color: #5A7A97;
+    background-color: #D6E4F2;
+    text-decoration: none;
+    border: 1px solid #344657;
+    color: #5A7A97;
+}
+
+.userName {
+
+    font-style: italic;
+    font-weight: bold;
+    color: #263340;
+
 }
 
 .fltrt {

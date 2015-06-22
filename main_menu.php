@@ -4,7 +4,7 @@
     <?php
 
     if (logged())
-    echo "<p id = 'userLoggedInfo'>Hi ".$_SESSION['user']." </p>";
+    echo "<p id = 'userLoggedInfo'>Hi <span class='userName'>".$_SESSION['user']."</span></p>";
     ?>
 
     <ul class="nav">
