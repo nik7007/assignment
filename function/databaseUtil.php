@@ -385,7 +385,7 @@ function getFreeSlots($activity)
               SELECT slot
               FROM $db_table_activities
               WHERE $db_table_activities.name = '$toSearch'
-              ";
+              FOR UPDATE";
 
 
     $result = $mysqli->query($query);

@@ -33,7 +33,7 @@
             <h1>Welcome back <span class="userName"><?php echo $_SESSION["user"]; ?></span></h1>
 
             <section>
-                <h3>Available activities for reservation:</h3>
+                <h3>Not reserved Activities:</h3>
 
 
                 <table id="available" class="pPage">

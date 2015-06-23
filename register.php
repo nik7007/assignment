@@ -42,19 +42,19 @@
 
                     <table>
                         <tr>
-                            <td>Username:</td>
-                            <td><input type='text' onclick="clearError()" maxlength='16' name='user' value=''/></td>
+                            <td>User Name:</td>
+                            <td><input type='text' onclick="clearError()" maxlength='16' name='user' placeholder = 'User Name' value=''/></td>
                             <td id="errorUser" class="error"></td>
                         </tr>
                         <tr>
                             <td>Password:</td>
-                            <td><input type='password' onclick="clearError()" maxlength='16' name='pass' value=''/>
+                            <td><input type='password' onclick="clearError()" maxlength='16' name='pass' placeholder = 'Password' value=''/>
                             </td>
                             <td id="errorPass" class="error"></td>
                         </tr>
                         <tr>
                             <td>Confirm:</td>
-                            <td><input type='password' onclick="clearError()" maxlength='16' name='confirmPass'
+                            <td><input type='password' onclick="clearError()" maxlength='16' name='confirmPass' placeholder = 'Confirm Password'
                                        value=''/>
                             </td>
                             <td id="errorConfPass" class="error"></td>
