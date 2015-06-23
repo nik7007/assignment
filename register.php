@@ -34,39 +34,45 @@
                 else $error = "<p class='error'>Username not available!</p><p>";
             }
             if (!isset($result) || !$result):
-                echo "$error Please choose an usermane and password! Do not forgot them, there is no way to recover: </p>";
-                ?>
+                if (!logged()):
+                    echo "$error Please choose an user name and password! Do not forgot them, there is no way to recover: </p>";
+                    ?>
+                    <form method='post'
+                          action="./register.php">
 
-                <form method='post'
-                      action="./register.php">
+                        <table>
+                            <tr>
+                                <td>User Name:</td>
+                                <td><input type='text' onclick="clearError()" maxlength='16' name='user'
+                                           placeholder='User Name' value=''/></td>
+                                <td id="errorUser" class="error"></td>
+                            </tr>
+                            <tr>
+                                <td>Password:</td>
+                                <td><input type='password' onclick="clearError()" maxlength='16' name='pass'
+                                           placeholder='Password' value=''/>
+                                </td>
+                                <td id="errorPass" class="error"></td>
+                            </tr>
+                            <tr>
+                                <td>Confirm:</td>
+                                <td><input type='password' onclick="clearError()" maxlength='16' name='confirmPass'
+                                           placeholder='Confirm Password'
+                                           value=''/>
+                                </td>
+                                <td id="errorConfPass" class="error"></td>
+                            </tr>
 
-                    <table>
-                        <tr>
-                            <td>User Name:</td>
-                            <td><input type='text' onclick="clearError()" maxlength='16' name='user' placeholder = 'User Name' value=''/></td>
-                            <td id="errorUser" class="error"></td>
-                        </tr>
-                        <tr>
-                            <td>Password:</td>
-                            <td><input type='password' onclick="clearError()" maxlength='16' name='pass' placeholder = 'Password' value=''/>
-                            </td>
-                            <td id="errorPass" class="error"></td>
-                        </tr>
-                        <tr>
-                            <td>Confirm:</td>
-                            <td><input type='password' onclick="clearError()" maxlength='16' name='confirmPass' placeholder = 'Confirm Password'
-                                       value=''/>
-                            </td>
-                            <td id="errorConfPass" class="error"></td>
-                        </tr>
+                            <tr>
+                                <td><input type='button' onclick="sendToServer();" value='Register'/></td>
+                            </tr>
+                        </table>
 
-                        <tr>
-                            <td><input type='button' onclick="sendToServer();" value='Register'/></td>
-                        </tr>
-                    </table>
-
-                </form>
-            <?php endif;
+                    </form>
+                <?php else:
+                    echo "<p>Your already logged in! <a href='./personalpage.php'>Click hear</a> to se your personal page.</p>";
+                endif;
+            endif;
             if (isset($result) && $result)
                 echo "<p>Now you can <a href='./login.php'>Login</a> and use our services!</p>"; ?>
 
