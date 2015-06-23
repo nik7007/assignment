@@ -70,7 +70,7 @@
 
                     </form>
                 <?php else:
-                    echo "<p>Your already logged in! <a href='./personalpage.php'>Click hear</a> to se your personal page.</p>";
+                    echo "<p>Your already logged in! <a href='./personalpage.php'>Click here</a> to se your personal page.</p>";
                 endif;
             endif;
             if (isset($result) && $result)
