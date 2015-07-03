@@ -174,14 +174,17 @@
         function colorTable() {
             for (var i = 1; i <= 4; i++)
                 $('table.pPage tr > td:nth-child(' + parseInt(i) + ')').attr('style', 'background-color:#D6E4F2;');
-            for (var i = 1; i <= 3; i++)
-                $('table.rPage tr > td:nth-child(' + parseInt(i) + ')').attr('style', 'background-color:#D6E4F2;');
+            for (var j = 1; j <= 3; j++)
+                $('table.rPage tr > td:nth-child(' + parseInt(j) + ')').attr('style', 'background-color:#D6E4F2;');
 
-            for (var i = 0; i < $('table#available tr').length; i++) {
-                if ($('#as' + parseInt(i)).html() <= 0) {
-                    $('table#available tr:eq(' + (parseInt(i) + 1) + ') td').attr('style', 'background-color:#e51a31!important;');
-                    $('table#available tr:eq(' + (parseInt(i) + 1) + ') > td:nth-child(5)').attr('style', '');
-                    $('table#available tr:eq(' + (parseInt(i) + 1) + ') > td:nth-child(5)').html("No more slots available").css('color', '#e51a31');
+            for (var k = 0; k < $('table#available tr').length; k++) {
+                if ($('#as' + parseInt(k)).html() <= 0) {
+
+                    var cell = $('table#available tr:eq(' + (parseInt(k) + 1) + ') > td:nth-child(5)');
+
+                    $('table#available tr:eq(' + (parseInt(k) + 1) + ') td').attr('style', 'background-color:#e51a31!important;');
+                    cell.attr('style', '');
+                    cell.html("No more slots available").css('color', '#e51a31');
                 }
 
             }
