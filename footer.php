@@ -24,6 +24,6 @@
 
     });
 
-    window.onclose = onClosePage();
+    //window.onclose = onClosePage();
 
 </script>

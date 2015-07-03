@@ -302,7 +302,7 @@ function getNumberReserved($activity)
                             FROM $db_table_activities
                             WHERE name = '$activity')
         GROUP BY activity
-
+        FOR UPDATE
     ");
 
     if ($result->num_rows == 0)
@@ -494,6 +494,10 @@ function newReservation($user, $activity, $howMany)
 {
 
     global $mysqli, $db_table_users, $db_table_activities, $db_table_reservations;
+
+    if($howMany < 1){
+        return false;
+    }
 
     if ($howMany > 4) {
         return -4;

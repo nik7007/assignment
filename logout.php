@@ -41,3 +41,4 @@
 
 </body>
 </html>
+<?php closingPage(); ?>

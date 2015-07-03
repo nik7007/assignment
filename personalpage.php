@@ -314,3 +314,4 @@
 <?php endif; ?>
 </body>
 </html>
+<?php closingPage(); ?>

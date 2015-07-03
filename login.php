@@ -125,3 +125,4 @@
 
 </body>
 </html>
+<?php closingPage(); ?>
